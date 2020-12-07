@@ -18,7 +18,7 @@ You can choose rispective Hashicorp version with these environment variables:
 
 |  ENV | default version |
 |---|---|
-| `CONSUL_VERSION`  |  `1.8.6` |
+| `CONSUL_VERSION`  |  `1.9.0` |
 | `CNI_VERSION`  |  `0.8.6` |
 |  `VAULT_VERSION` |  `1.6.0` |
 |  `CNI_VERSION` | `0.8.6` |
