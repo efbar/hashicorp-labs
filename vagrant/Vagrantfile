@@ -10,7 +10,7 @@ base_box = ENV['BASE_BOX'] || "bento/centos-7"
 # Consul variables
 consul_install = ["true", "1"].include?((ENV['CONSUL_INSTALL'] || true).to_s.downcase)
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.8.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.9.0"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
