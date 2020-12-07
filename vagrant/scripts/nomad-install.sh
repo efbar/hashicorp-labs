@@ -13,6 +13,7 @@ NOMAD_DATA_DIR=/opt/nomad/data
 NOMAD_TLS_DIR=/opt/nomad/tls
 NOMAD_ENV_VARS=${NOMAD_CONFIG_DIR}/nomad.conf
 NOMAD_PROFILE_SCRIPT=/etc/profile.d/nomad.sh
+NOMAD_FLAGS="-dev -bind 0.0.0.0"
 GROUP="${GROUP:-}"
 USER="${USER:-}"
 COMMENT="${COMMENT:-}"
@@ -43,11 +44,6 @@ echo "$(${NOMAD_PATH} --version)"
 echo "Configuring Nomad ${NOMAD_VERSION}"
 sudo mkdir -pm 0755 ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS_DIR}
 
-echo "Start Nomad in -dev mode"
-sudo tee ${NOMAD_ENV_VARS} > /dev/null <<ENVVARS
-FLAGS=-bind 0.0.0.0 -dev
-ENVVARS
-
 echo "Update directory permissions"
 sudo chown -R ${USER}:${GROUP} ${NOMAD_CONFIG_DIR} ${NOMAD_DATA_DIR} ${NOMAD_TLS_DIR}
 sudo chmod -R 0644 ${NOMAD_CONFIG_DIR}/*
@@ -57,7 +53,32 @@ sudo tee ${NOMAD_PROFILE_SCRIPT} > /dev/null <<PROFILE
 export NOMAD_ADDR=http://127.0.0.1:4646
 PROFILE
 
-sudo chmod 0664 /etc/systemd/system/{nomad*,consul*}
+sudo tee /etc/systemd/system/nomad.service <<EOT
+[Unit]
+Description=Nomad Agent
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d ${NOMAD_FLAGS}
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+EOT
+
+sudo chmod 0664 /etc/systemd/system/nomad.service
+
+consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
+
+while [ $(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") != "200" ]; do
+  echo "Waiting for Consul to get a leader..."
+  sleep 5
+  consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
+done
 
 sudo systemctl enable nomad
 sudo systemctl start nomad

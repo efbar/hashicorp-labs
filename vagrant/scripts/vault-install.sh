@@ -39,6 +39,7 @@ VAULT_DATA_DIR=/opt/vault/data
 VAULT_TLS_DIR=/opt/vault/tls
 VAULT_ENV_VARS=${VAULT_CONFIG_DIR}/vault.conf
 VAULT_PROFILE_SCRIPT=/etc/profile.d/vault.sh
+VAULT_FLAGS="-dev -dev-ha -dev-transactional -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200"
 
 echo "Downloading Vault ${VAULT_VERSION}"
 [ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${VAULT_ZIP} ${VAULT_URL}) ] && exit 1
@@ -51,11 +52,6 @@ echo "$(${VAULT_PATH} --version)"
 
 echo "Configuring Vault ${VAULT_VERSION}"
 sudo mkdir -pm 0755 ${VAULT_CONFIG_DIR} ${VAULT_DATA_DIR} ${VAULT_TLS_DIR}
-
-echo "Start Vault in -dev mode"
-sudo tee ${VAULT_ENV_VARS} > /dev/null <<ENVVARS
-FLAGS=-dev -dev-ha -dev-transactional -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200
-ENVVARS
 
 echo "Update directory permissions"
 sudo chown -R ${USER}:${GROUP} ${VAULT_CONFIG_DIR} ${VAULT_DATA_DIR} ${VAULT_TLS_DIR}
@@ -72,10 +68,36 @@ sudo setcap cap_ipc_lock=+ep ${VAULT_PATH}
 
 echo "Vault systemd config"
 
+sudo tee /etc/systemd/system/vault.service <<EOT
+[Unit]
+Description=Vault Agent
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+PermissionsStartOnly=true
+ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/bin/vault
+ExecStart=/usr/local/bin/vault server -config /etc/vault.d ${VAULT_FLAGS}
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+User=vault
+Group=vault
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target
+EOT
+
 sudo chmod 0664 /etc/systemd/system/vault.service
 
-sudo systemctl enable consul
-sudo systemctl start consul
+consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
+
+while [ $(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") != "200" ]; do
+  echo "Waiting for Consul to get a leader..."
+  sleep 5
+  consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
+done
+
 
 sudo systemctl enable vault
 sudo systemctl start vault

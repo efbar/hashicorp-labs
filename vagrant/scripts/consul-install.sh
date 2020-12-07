@@ -43,6 +43,7 @@ CONSUL_DATA_DIR=/opt/consul/data
 CONSUL_TLS_DIR=/opt/consul/tls
 CONSUL_ENV_VARS=${CONSUL_CONFIG_DIR}/consul.conf
 CONSUL_PROFILE_SCRIPT=/etc/profile.d/consul.sh
+CONSUL_FLAGS="-dev -ui -client 0.0.0.0"
 
 echo "Downloading Consul ${CONSUL_VERSION}"
 [ 200 -ne $(curl --write-out %{http_code} --silent --output /tmp/${CONSUL_ZIP} ${CONSUL_URL}) ] && exit 1
@@ -55,12 +56,6 @@ echo "$(${CONSUL_PATH} --version)"
 
 echo "Configuring Consul ${CONSUL_VERSION}"
 sudo mkdir -pm 0755 ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
-
-echo "Start Consul in -dev mode"
-sudo tee ${CONSUL_ENV_VARS} > /dev/null <<ENVVARS
-FLAGS=-dev -ui -client 0.0.0.0
-CONSUL_HTTP_ADDR=http://127.0.0.1:8500
-ENVVARS
 
 echo "Update directory permissions"
 sudo chown -R ${USER}:${GROUP} ${CONSUL_CONFIG_DIR} ${CONSUL_DATA_DIR} ${CONSUL_TLS_DIR}
@@ -104,8 +99,7 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
-EnvironmentFile=/etc/consul.d/consul.conf
-ExecStart=/usr/local/bin/consul agent -data-dir ${CONSUL_DATA_DIR} -config-dir /etc/consul.d -bind=${PRIVATE_IP} -dev -ui -client 0.0.0.0
+ExecStart=/usr/local/bin/consul agent ${CONSUL_FLAGS} -data-dir ${CONSUL_DATA_DIR} -config-dir /etc/consul.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=consul
