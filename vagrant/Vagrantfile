@@ -10,19 +10,19 @@ base_box = ENV['BASE_BOX'] || "bento/centos-7"
 # Consul variables
 consul_install = ["true", "1"].include?((ENV['CONSUL_INSTALL'] || true).to_s.downcase)
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.8.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.9.1"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
 consul_comment = "Consul"
 consul_home = "/srv/consul"
 cni_install = ["true", "1"].include?((ENV['CNI_INSTALL'] || true).to_s.downcase)
-cni_version = ENV['CNI_VERSION'] || "0.8.6"
+cni_version = ENV['CNI_VERSION'] || "0.9.0"
 
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-vault_version = ENV['VAULT_VERSION'] || "1.6.0"
+vault_version = ENV['VAULT_VERSION'] || "1.6.1"
 vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
 vault_user = "vault"
@@ -31,7 +31,7 @@ vault_home = "/srv/vault"
 
 # Nomad variables
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
-nomad_version = ENV['NOMAD_VERSION'] || "0.12.8"
+nomad_version = ENV['NOMAD_VERSION'] || "1.0.1"
 nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "nomad"
 nomad_user = "nomad"
@@ -39,7 +39,7 @@ nomad_home = "/srv/nomad"
 
 # Docker variables
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
-containerd_version = ENV['CONTAINERD_VERSION'] || "1.3.7-3.1"
+containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.3-3.1"
 docker_ce_version = ENV['DOCKER_CE_VERSION'] || "19.03.13-3"
 envoy_version = ENV['ENVOY_VERSION'] || "1.14.5"
 
