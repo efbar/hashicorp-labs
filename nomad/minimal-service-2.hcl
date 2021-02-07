@@ -1,4 +1,4 @@
-job "minimal-service" {
+job "minimal-service-2" {
     datacenters = ["dc1"]
 
     group "minimal-service-group" {
@@ -8,18 +8,11 @@ job "minimal-service" {
         }
 
         service {
-          name = "minimal-service"
+          name = "minimal-service-2"
           port = "http"
 
           connect {
-              sidecar_service {
-                proxy {
-                  upstreams {
-                      destination_name = "minimal-service-2"
-                      local_bind_port = 8080
-                  } 
-                }
-              }
+              sidecar_service {}
           }
 
           check {
