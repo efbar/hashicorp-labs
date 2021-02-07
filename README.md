@@ -36,10 +36,7 @@ Inside `vagrant` folder:
 vagrant up
 ```
 
-If you want to expose the services UI at `http://localhost:<service_port>`
-or Nomad UI: `http://192.168.50.153:4646`,
-Consul UI: `http://192.168.50.153:8500`,
-Vault UI: `http://192.168.50.153:8200`,
+If you want to expose the services UI at `http://localhost:<service_port>`.
 
 ## Deploy in Nomad
 
