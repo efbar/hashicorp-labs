@@ -36,18 +36,10 @@ Inside `vagrant` folder:
 vagrant up
 ```
 
-If you want to expose the services UI, you can do something like:
-
-```bash
-vagrant ssh -- -L 8200:localhost:8200 -L 8500:localhost:8500 -L 4646:localhost:4646
-```
-
-Now you can reach those service at `http://localhost:<service_port>`
-
-Or, without port-forwarding, go directly to:
-the Nomad UI: `http://192.168.50.153:4646`
-Consul UI: `http://192.168.50.153:8500`
-Vault UI: `http://192.168.50.153:8200`
+If you want to expose the services UI at `http://localhost:<service_port>`
+or Nomad UI: `http://192.168.50.153:4646`,
+Consul UI: `http://192.168.50.153:8500`,
+Vault UI: `http://192.168.50.153:8200`,
 
 ## Deploy in Nomad
 
