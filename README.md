@@ -58,10 +58,13 @@ nomad run minimal-service.hcl
 nomad run minimal-service-2.hcl
 ```
 
-Do some intraservices communication test:
+Do some intra-services communication test:
 
 ```bash
-nomad status minimal-service
-nomad alloc exec -task minimal-service <alloc_ID> curl 127.0.0.1:8080
+nomad alloc exec -task minimal-service \
+  $(curl -s http://127.0.0.1:4646/v1/job/minimal-service/allocations | \
+  jq -r '.[0].ID'| \
+  cut -c -8) curl -s 127.0.0.1:8080 | \
+  jq
 ```
 
