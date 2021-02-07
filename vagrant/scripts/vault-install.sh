@@ -71,7 +71,6 @@ echo "Vault systemd config"
 sudo tee /etc/systemd/system/vault.service <<EOT
 [Unit]
 Description=Vault Agent
-Requires=consul.service
 
 [Service]
 Restart=on-failure
@@ -89,15 +88,6 @@ WantedBy=multi-user.target
 EOT
 
 sudo chmod 0664 /etc/systemd/system/vault.service
-
-consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
-
-while [ $(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") != "200" ]; do
-  echo "Waiting for Consul to get a leader..."
-  sleep 5
-  consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
-done
-
 
 sudo systemctl enable vault
 sudo systemctl start vault

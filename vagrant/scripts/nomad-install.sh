@@ -60,7 +60,7 @@ Requires=consul.service
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d ${NOMAD_FLAGS}
+ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=root
