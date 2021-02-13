@@ -40,7 +40,7 @@ To provision and deploy the workload simply do:
 ./deploy.sh
 ```
 
-At the end you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
+At the end, if everything went fine, you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
 
 In Consul you should see something like:
 
@@ -92,7 +92,7 @@ In this cluster we have also deployed `faasd`! So now we can reach OpenFaas gate
 
 ![](images/faasd_task.png)
 
-Just add `127.0.0.1 faasd-gateway` to your `cat /etc/hosts` file and you're done.
+Just add `127.0.0.1 faasd-gateway` to your `/etc/hosts` file and you're done.
 
 Go to `http://faasd-gateway:8181` to enjoy the beautiful OpenFaas homepage.
 
@@ -100,4 +100,4 @@ Go to `http://faasd-gateway:8181` to enjoy the beautiful OpenFaas homepage.
 
 ## Clean up
 
-For clean up just execute `clean.sh`.
+For cleaning up just execute `clean.sh`.
