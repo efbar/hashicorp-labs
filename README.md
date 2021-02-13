@@ -12,6 +12,7 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
   - [Provision and deploy](#provision-and-deploy)
   - [Play with microservices](#play-with-microservices)
   - [OpenFaas in Nomad](#openfaas-in-nomad)
+  - [Clean up](#clean-up)
 
 
 ## Install cluster with Vagrant
@@ -97,3 +98,6 @@ Go to `http://faasd-gateway:8181` to enjoy the beautiful OpenFaas homepage.
 
 ![](images/openfaas.png)
 
+## Clean up
+
+For clean up just execute `clean.sh`.
