@@ -6,6 +6,7 @@ private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 
 # Base box selection
 base_box = ENV['BASE_BOX'] || "bento/centos-7"
+box_version = ENV['BOX_VERSION'] || "202012.21.0"
 
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
@@ -42,7 +43,12 @@ nomad_home = "/srv/nomad"
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
 containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.3-3.1"
 docker_ce_version = ENV['DOCKER_CE_VERSION'] || "19.03.13-3"
-envoy_version = ENV['ENVOY_VERSION'] || "1.16.1"
+envoy_version = ENV['ENVOY_VERSION'] || "1.16.2.p0.ge98e41a-1p71.gbe6132a"
+
+# Faasd variables
+faasd_install = ["true", "1"].include?((ENV['FAASD_INSTALL'] || true).to_s.downcase)
+faasd_version = ENV['FAASD_VERSION'] || "0.10.2"
+
 
 $nomad_setup = <<SCRIPT
 echo "Minimal configuration for Nomad UI"
@@ -51,20 +57,45 @@ sudo systemctl restart nomad
 SCRIPT
 
 Vagrant.configure("2") do |config|
+
   # Use vagrant insecure public key, comment this out to restrict access
   config.ssh.insert_key = false
+
+   # Increase memory for Parallels Desktop
+   config.vm.provider "parallels" do |p, o|
+    p.memory = 8192
+  end
+
+  # Increase memory for Virtualbox
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 8192
+    vb.cpus = 2
+  end
+
+  # Increase memory for VMware
+  ["vmware_fusion", "vmware_workstation"].each do |p|
+    config.vm.provider p do |v|
+      v.vmx["memsize"] = 8192
+    end
+  end
 
   # Setup networking
   config.vm.network :private_network, ip: private_ip
   config.vm.network "private_network", type: "dhcp"
 
-  # Use base_box set at the top of this file
+  # Set box version
   config.vm.box = base_box
+  config.vm.box_version = box_version
+
+  # Set hostname
   config.vm.hostname = "nomad"
 
   # Bootstrap the vm
   config.vm.provision "shell",
   path: "scripts/base-setup.sh"
+
+  # Forward Ingress port
+  config.vm.network :forwarded_port, guest: 8181, host: 8181, auto_correct: true
 
   if (vault_install)
     # Forward Vault port
@@ -134,60 +165,20 @@ Vagrant.configure("2") do |config|
     }
   end
 
-  # Increase memory for Parallels Desktop
-  config.vm.provider "parallels" do |p, o|
-    p.memory = "1024"
-  end
-
-  # Increase memory for Virtualbox
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "1024"
-  end
-
-  # Increase memory for VMware
-  ["vmware_fusion", "vmware_workstation"].each do |p|
-    config.vm.provider p do |v|
-      v.vmx["memsize"] = "1024"
-    end
+  if (faasd_install)
+    config.vm.provision "shell",
+    path: "scripts/faasd-install.sh",
+    env: {
+      "FAASD_VERSION" => faasd_version,
+    }
   end
 
    config.vm.post_up_message = "
-Your Nomad dev cluster has been successfully provisioned!
+Done!
 
-To SSH into a Nomad host, run the below command.
-
-  $ vagrant ssh
-
-You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html)
-or API (https://www.nomadproject.io/api/index.html) commands.
-
-  $ nomad server members # Check Nomad's server members
-  $ nomad node-status # Check Nomad's client nodes
-  $ nomad init # Create a skeletion job file to deploy a Redis Docker container
-
-  # Use the CLI to deploy a Redis Docker container
-  $ nomad plan example.nomad # Run a nomad plan on the example job
-  $ nomad run example.nomad # Run the example job
-  $ nomad status # Check that the job is running
-  $ nomad status example # Check job details
-  $ nomad stop example # Stop the example job
-  $ nomad status # Check that the job is stopped
-
-  # Use the API to deploy a Redis Docker container
-  $ nomad run -output example.nomad > example.json # Convert the example Nomad HCL job file to JSON
-  $ curl -X POST -d @example.json http://127.0.0.1:4646/v1/job/example/plan | jq '.' # Run a nomad plan on the example job
-  $ curl -X POST -d @example.json http://127.0.0.1:4646/v1/job/example | jq '.' # Run the example job
-  $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is running
-  $ curl -X GET http://127.0.0.1:4646/v1/job/example | jq '.' # Check job details
-  $ curl -X DELETE http://127.0.0.1:4646/v1/job/example | jq '.' # Stop the example job
-  $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is stopped
-
-Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}
-#{consul_install ? 'Visit the Consul UI: http://'+ private_ip + ':' + consul_host_port.to_s : ''}
-#{vault_install ? 'Visit the Vault UI: http://' + private_ip + ':' + vault_host_port.to_s : ''}
-
-Don't forget to tear your VM down after.
-
-  $ vagrant destroy
+You can reach services at:
+Vautl -> http://localhost:8200
+Consul -> http://localhost:8500
+Nomad -> http://localhost:4646
 "
 end
