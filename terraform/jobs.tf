@@ -1,5 +1,5 @@
 locals {
-  jobs = { for j in fileset(path.module, "jobs/*_job.hcl") : basename(trimsuffix(j, "_job.hcl")) => j }
+  jobs = { for j in fileset(path.module, "jobs/*.hcl") : basename(trimsuffix(j, ".hcl")) => j }
 }
 
 resource "nomad_job" "jobs" {
