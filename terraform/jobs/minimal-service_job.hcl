@@ -1,10 +1,13 @@
 job "minimal-service" {
-    datacenters = ["dc1"]
+    datacenters = ["${dc_name}"]
 
     group "minimal-service-group" {
         network {
             mode = "bridge"
             port "http" {}
+            dns {
+              servers = ["10.0.2.15"]
+            }
         }
 
         service {
@@ -41,7 +44,7 @@ job "minimal-service" {
             }
 
             env {
-              SERVICE_PORT="${NOMAD_PORT_http}"
+              SERVICE_PORT="$${NOMAD_PORT_http}"
             }
 
             resources {

@@ -1,5 +1,5 @@
 job "minimal-service-2" {
-    datacenters = ["dc1"]
+    datacenters = ["${dc_name}"]
 
     group "minimal-service-group" {
         network {
@@ -34,7 +34,7 @@ job "minimal-service-2" {
             }
 
             env {
-              SERVICE_PORT="${NOMAD_PORT_http}"
+              SERVICE_PORT="$${NOMAD_PORT_http}"
             }
 
             resources {
