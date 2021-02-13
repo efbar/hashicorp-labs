@@ -4,9 +4,9 @@ set -x
 echo "Docker install and envoy for docker install"
 
 # install docker and envoy for docker
-[ -f containerd.io-${CONTAINERD_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-${CONTAINERD_VERSION}.el7.x86_64.rpm
-[ -f docker-ce-${DOCKER_CE_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-${DOCKER_CE_VERSION}.el7.x86_64.rpm
-[ -f docker-ce-cli-${DOCKER_CE_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-${DOCKER_CE_VERSION}.el7.x86_64.rpm
+[ -f containerd.io-${CONTAINERD_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-${CONTAINERD_VERSION}.el7.x86_64.rpm && \
+[ -f docker-ce-${DOCKER_CE_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-${DOCKER_CE_VERSION}.el7.x86_64.rpm && \
+[ -f docker-ce-cli-${DOCKER_CE_VERSION}.el7.x86_64.rpm ] || wget -q https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-${DOCKER_CE_VERSION}.el7.x86_64.rpm && \
 sudo yum install -y containerd.io-${CONTAINERD_VERSION}.el7.x86_64.rpm docker-ce-${DOCKER_CE_VERSION}.el7.x86_64.rpm docker-ce-cli-${DOCKER_CE_VERSION}.el7.x86_64.rpm && \
 sudo usermod -G docker -a nomad && \
 sudo systemctl start docker && \
