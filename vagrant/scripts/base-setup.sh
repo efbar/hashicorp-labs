@@ -13,7 +13,7 @@ sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
 sudo yum -y check-update
 
 echo "Install some packages"
-sudo yum install ntp git wget unzip jq dnsmasq openjdk-8-jdk java-1.8.0-openjdk bind-utils tcpdump -y
+sudo yum install ntp git wget unzip jq dnsmasq openjdk-8-jdk java-1.8.0-openjdk bind-utils tcpdump nc -y
 
 echo "Start NTP server"
 sudo systemctl start ntpd.service
