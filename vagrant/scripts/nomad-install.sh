@@ -60,6 +60,7 @@ Requires=consul.service
 
 [Service]
 Restart=on-failure
+RestartSec=4
 ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
@@ -74,7 +75,7 @@ sudo chmod 0664 /etc/systemd/system/nomad.service
 
 consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
 
-while [ $(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") != "200" ]; do
+while [ $consul_up != "200" ]; do
   echo "Waiting for Consul to get a leader..."
   sleep 5
   consul_up=$(curl --silent --output /dev/null --write-out "%{http_code}" "127.0.0.1:8500/v1/status/leader") || consul_up=""
