@@ -4,7 +4,7 @@ This repo contains tools for testing and experimenting with Hashicorp software.
 
 But not only that..you can play with `OpenFaas` serverless stuff too! Keep reading.
 
-It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component will be connected together to form a perfect cluster for testing your application with service mesh
+It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component will be connected together to form a perfect environment for testing your applications with service mesh.
 
 **Table of Contents**
 - [Hashicorp Labs](#hashicorp-labs)
