@@ -104,6 +104,8 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=consul
 Group=consul
+Restart=on-failure
+RestartSec=4
 
 [Install]
 WantedBy=multi-user.target
@@ -117,7 +119,7 @@ echo "Install Envoy, binary version"
 
 [ -f getenvoy-envoy-${ENVOY_VERSION}.x86_64.rpm ] || wget -q https://tetrate.bintray.com/getenvoy-rpm/centos/7/x86_64/stable/Packages/getenvoy-envoy-${ENVOY_VERSION}.x86_64.rpm && \
 sudo yum install -y ./getenvoy-envoy-${ENVOY_VERSION}.x86_64.rpm && \
-sudo rm -f /usr/bin/envoy && sudo mv /opt/getenvoy/bin/envoy /usr/bin
+sudo rm -f /usr/bin/envoy && sudo mv /opt/getenvoy/bin/envoy /usr/bin && chmod +x /usr/bin/envoy && \
 
 echo "Install CNI plugins"
 
