@@ -34,6 +34,8 @@ You can choose respective Hashicorp version with these environment variables:
 
 ## Provision and deploy
 
+> You need Hashicorp **Terraform** and **Vagrant** installed.
+
 To provision and deploy the workload simply do:
 
 ```bash
