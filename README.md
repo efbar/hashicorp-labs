@@ -19,6 +19,9 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
 
 > WARNING: At the moment the clusters will be loaded in `dev` mode. If the services will fail, you will lose every data since the backends are loaded in memory.
 
+> Vagrant file is taken partially from here [hashicorp's nomad-guides](https://github.com/hashicorp/nomad-guides/tree/master/operations/provision-nomad/dev/vagrant-local)
+It's been revisited and modified (and it will be upgraded in the future).
+
 You can choose respective Hashicorp version with these environment variables:
 
 |  ENV | default version |
