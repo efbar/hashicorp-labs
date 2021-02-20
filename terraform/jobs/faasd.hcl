@@ -23,11 +23,9 @@ job "faasd_bundle" {
       }
       port "nats_mon" {}
       port "gateway_http" {
-        static = 22222
         to = 8080
       }
       port "gateway_mon" {
-        static = 22223
         to = 8082
       }
       dns {
