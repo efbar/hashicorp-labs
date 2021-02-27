@@ -1,4 +1,5 @@
 resource "consul_config_entry" "ingress_gateway" {
+  count = var.enable_gateways ? 1 : 0
   depends_on = [
     consul_config_entry.proxy_defaults
   ]
@@ -7,28 +8,21 @@ resource "consul_config_entry" "ingress_gateway" {
 
   config_json = jsonencode({
     Listeners = [{
-      Port     = 8181
+      Port     = 9090
       Protocol = "http"
       Services = [
         {
           Name = "minimal-service"
           Hosts = [
             "minimal-service",
-            "minimal-service:8080",
+            "minimal-service:9090",
           ]
         },
         {
           Name = "minimal-service-2"
           Hosts = [
             "minimal-service-2",
-            "minimal-service-2:8080",
-          ]
-        },
-        {
-          Name = "faasd-gateway"
-          Hosts = [
-            "faasd-gateway",
-            "faasd-gateway:8080",
+            "minimal-service-2:9090",
           ]
         }
       ]
