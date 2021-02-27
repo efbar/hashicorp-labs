@@ -8,8 +8,6 @@ job "faasd_bundle" {
     network {
       mode = "bridge"
 
-      # This example will enable plain HTTP traffic to access the uuid-api connect
-      # native example service on port 8080.
       port "inbound" {
         static = 8080
         to     = 8080
