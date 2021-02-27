@@ -12,13 +12,15 @@ vagrant up
 echo -e "\033[32mDeploying workload..\033[0m"
 cd ${DIR}/terraform
 terraform init && terraform plan && terraform apply -auto-approve && \
-echo -e "\033[32m Done!
+echo -e "\033[32m 
+ Done!
  For services UI:
 
-=> Vault:    http://localhost:8200
-=> Consul:   http://localhost:8500
-=> Nomad:    http://localhost:4646
-=> OpenFaas: http://localhost:8181
+=> Vault:               http://localhost:8200
+=> Consul:              http://localhost:8500
+=> Nomad:               http://localhost:4646
+=> Minimal services:    http://localhost:9090
+=> OpenFaas:            http://localhost:8080, user/pwd: admin/password
 
 \033[0m"
 
