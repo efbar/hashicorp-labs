@@ -6,3 +6,7 @@ variable "nomad_endpoint" {
   type    = string
   default = "http://localhost:4646"
 }
+variable "enable_gateways" {
+  type = bool
+  default = true
+}
