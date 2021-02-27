@@ -28,8 +28,8 @@ You can choose respective Hashicorp version with these environment variables:
 |---|---|
 |  `CONSUL_VERSION`  |  `1.9.3` |
 |  `CNI_VERSION`  |  `0.9.0` |
-|  `VAULT_VERSION` |  `1.6.2` |
-|  `NOMAD_VERSION` | `1.0.3` |
+|  `VAULT_VERSION` |  `1.6.3` |
+|  `NOMAD_VERSION` | `1.0.4` |
 |  `CONTAINERD_VERSION` | `1.4.3-3.1` |
 |  `DOCKER_CE_VERSION` | `19.03.13-3` |
 |  `ENVOY_VERSION` | `1.16.2` |
@@ -69,7 +69,7 @@ nomad alloc exec -task minimal-service \
   cut -c -8) curl -s 127.0.0.1:8080 | \
   jq
 {
-  "host": "127.0.0.1:8080",
+  "host": "127.0.0.1:9090",
   "statuscode": 200,
   "headers": {
     "Accept": "*/*",
@@ -99,7 +99,7 @@ In this cluster we have also deployed `faasd`! So now we can reach OpenFaas gate
 
 Just add `127.0.0.1 faasd-gateway` to your `/etc/hosts` file and you're done.
 
-Go to `http://faasd-gateway:8181` to enjoy the beautiful OpenFaas homepage.
+Go to `http://faasd-gateway:8080` to enjoy the beautiful OpenFaas homepage.
 
 ![](images/openfaas.png)
 
