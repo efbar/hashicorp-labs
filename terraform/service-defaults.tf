@@ -15,3 +15,12 @@ resource "consul_config_entry" "minimal-service-2" {
     Protocol    = "http"
   })
 }
+
+resource "consul_config_entry" "faasd-gateway" {
+  name = "faasd-gateway"
+  kind = "service-defaults"
+
+  config_json = jsonencode({
+    Protocol    = "http"
+  })
+}
