@@ -15,7 +15,7 @@ resource "nomad_job" "jobs" {
 }
 
 resource "nomad_job" "gateway_jobs" {
-  for_each = var.enable_gateways ? local.gateway_jobs : {}
+  for_each = local.gateway_jobs
   jobspec = templatefile(
     each.value,
     {
