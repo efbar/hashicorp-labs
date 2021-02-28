@@ -16,6 +16,24 @@ resource "consul_config_entry" "minimal-service-2" {
   })
 }
 
+resource "consul_config_entry" "grafana" {
+  name = "grafana"
+  kind = "service-defaults"
+
+  config_json = jsonencode({
+    Protocol    = "http"
+  })
+}
+
+resource "consul_config_entry" "prometheus" {
+  name = "prometheus"
+  kind = "service-defaults"
+
+  config_json = jsonencode({
+    Protocol    = "http"
+  })
+}
+
 resource "consul_config_entry" "faasd-gateway" {
   name = "faasd-gateway"
   kind = "service-defaults"

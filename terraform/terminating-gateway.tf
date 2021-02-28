@@ -7,6 +7,12 @@ resource "consul_config_entry" "terminating_gateway" {
     Services = [
       {
         Name = "faasd-gateway"
+      },
+      {
+        Name = "grafana"
+      },
+      {
+        Name = "prometheus"
       }
     ]
   })

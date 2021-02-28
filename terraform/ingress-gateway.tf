@@ -24,6 +24,20 @@ resource "consul_config_entry" "ingress_gateway" {
             "minimal-service-2",
             "minimal-service-2:9090",
           ]
+        },
+        {
+          Name = "prometheus"
+          Hosts = [
+            "prometheus",
+            "prometheus:9090",
+          ]
+        },
+        {
+          Name = "grafana"
+          Hosts = [
+            "grafana",
+            "grafana:9090",
+          ]
         }
       ]
     }]
