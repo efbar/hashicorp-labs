@@ -1,31 +1,43 @@
-job "consul-ingress" {
-  datacenters = ["${dc_name}"]
+job "ingress-gateway" {
+
+  datacenters = ["dc1"]
 
   group "ingress-group" {
+
     network {
-      port "http" {}
-      mode = "host"
-    }
-    task "ingress" {
-      driver = "exec"
-      user   = "consul"
-      config {
-        command = "/usr/local/bin/consul"
-        args = [
-          "connect", "envoy",
-          "-envoy-binary", "/usr/bin/envoy",
-          "-envoy-version", "1.16.2",
-          "-gateway=ingress",
-          "-register",
-          "-service", "ingress-gateway",
-          "-address", "$${NOMAD_IP_http}:$${NOMAD_PORT_http}",
-          "-http-addr", "http://127.0.0.1:8500",
-          "-grpc-addr", "http://127.0.0.1:8502"
-        ]
+      mode = "bridge"
+      port "inbound" {
+        static = 8080
+        to     = 8080
       }
-      resources {
-         cpu    = 500
-         memory = 250
+    }
+
+    service {
+      name = "ingress-service"
+      port = "8080"
+
+      connect {
+        gateway {
+          proxy {}
+          ingress {
+            listener {
+              port     = 8080
+              protocol = "http"
+              service {
+                name = "minimal-service"
+                hosts = ["minimal-service","minimal-service:8080" ]
+              }
+              service {
+                name = "minimal-service-2"
+                hosts = ["minimal-service-2","minimal-service-2:8080" ]
+              }
+              service {
+                name = "faasd-gateway"
+                hosts = ["faasd-gateway","faasd-gateway:8080" ]
+              }
+            }
+          }
+        }
       }
     }
   }

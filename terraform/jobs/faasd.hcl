@@ -1,42 +1,6 @@
 job "faasd_bundle" {
   datacenters = ["${dc_name}"]
   type        = "service"
-
-  group "ingress-group" {
-    stop_after_client_disconnect = "30s"
-
-    network {
-      mode = "bridge"
-
-      port "inbound" {
-        static = 8080
-        to     = 8080
-      }
-    }
-
-    service {
-      name = "ingress-faasd-gateway"
-      port = "8080"
-
-      connect {
-        gateway {
-
-          proxy {}
-
-          ingress {
-            listener {
-              port     = 8080
-              protocol = "http"
-              service {
-                name = "faasd-gateway"
-                hosts = ["faasd-gateway","faasd-gateway:8080" ]
-              }
-            }
-          }
-        }
-      }
-    }
-  }
  
   group "faasd" {
 
