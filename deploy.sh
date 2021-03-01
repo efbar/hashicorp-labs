@@ -22,8 +22,10 @@ echo -e "\033[32m
 => Vault:               http://localhost:8200
 => Consul:              http://localhost:8500
 => Nomad:               http://localhost:4646
-=> Minimal services:    http://localhost:9090
+=> Minimal services:    http://localhost:8080
 => OpenFaas:            http://faasd-gateway:8080, user/pwd: admin/password
+=> Prometheus:          http://prometheus:8080
+=> Grafana:             http://grafana:8080, user/pwd: admin/admin
 
 \033[0m"
 
