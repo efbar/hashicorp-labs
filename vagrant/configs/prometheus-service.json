@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "prometheus",
+    "tags": [
+      "monitoring"
+    ],
+    "port": 9090,
+    "check": {
+      "http": "http://localhost:9090/-/healthy",
+      "interval": "30s"
+    }
+  }
+}

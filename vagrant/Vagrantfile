@@ -45,6 +45,11 @@ containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.3-3.1"
 docker_ce_version = ENV['DOCKER_CE_VERSION'] || "19.03.13-3"
 envoy_version = ENV['ENVOY_VERSION'] || "1.16.2.p0.ge98e41a-1p71.gbe6132a"
 
+# Monitoring variables
+monitoring_install = ["true", "1"].include?((ENV['MONITORING_INSTALL'] || true).to_s.downcase)
+prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.23.0"
+grafana_version = ENV['GRAFANA_VERSION'] || "7.3.5-1"
+
 # Faasd variables
 faasd_install = ["true", "1"].include?((ENV['FAASD_INSTALL'] || true).to_s.downcase)
 faasd_version = ENV['FAASD_VERSION'] || "0.10.2"
@@ -98,7 +103,6 @@ Vagrant.configure("2") do |config|
 
   # Forward Ingress port
   config.vm.network :forwarded_port, guest: 8080, host: 8080, auto_correct: true
-  config.vm.network :forwarded_port, guest: 9090, host: 9090, auto_correct: true
 
   if (vault_install)
     # Forward Vault port
@@ -122,6 +126,8 @@ Vagrant.configure("2") do |config|
     config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
 
     # Install Consul
+    config.vm.provision "file", source: "configs/prometheus-service.json", destination: "/tmp/prometheus-service.json"
+    config.vm.provision "file", source: "configs/grafana-service.json", destination: "/tmp/grafana-service.json"
     config.vm.provision "shell",
     path: "scripts/consul-install.sh",
     env: {
@@ -173,6 +179,20 @@ Vagrant.configure("2") do |config|
     path: "scripts/faasd-install.sh",
     env: {
       "FAASD_VERSION" => faasd_version,
+    }
+  end
+
+  if (monitoring_install)
+    config.vm.provision "file", source: "configs/prometheus.yml", destination: "/tmp/prometheus.yml"
+    config.vm.provision "file", source: "configs/prometheus-ds.yaml", destination: "/tmp/prometheus-ds.yaml"
+    config.vm.provision "file", source: "configs/dashboard-provision.yaml", destination: "/tmp/dashboard-provision.yaml"
+    config.vm.provision "file", source: "configs/faasd.json", destination: "/tmp/faasd.json"
+    config.vm.provision "file", source: "configs/nomad-jobs.json", destination: "/tmp/nomad-jobs.json"
+    config.vm.provision "shell",
+    path: "scripts/monitoring-install.sh",
+    env: {
+      "PROMETHEUS_VERSION" => prometheus_version,
+      "GRAFANA_VERSION" => grafana_version,
     }
   end
 

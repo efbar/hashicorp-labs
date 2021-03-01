@@ -74,6 +74,10 @@ sudo tee /etc/sudoers.d/consul > /dev/null <<SUDOERS
 consul ALL=(ALL) NOPASSWD: /usr/bin/echo, /usr/bin/tee, /usr/bin/cat, /usr/bin/sed, /usr/bin/systemctl
 SUDOERS
 
+echo "Add prometheus and grafana service"
+sudo mv /tmp/prometheus-service.json /etc/consul.d/prometheus.json
+sudo mv /tmp/grafana-service.json /etc/consul.d/grafana-service.json
+
 echo "Installing dnsmasq via yum"
 sudo yum install -q -y dnsmasq
 

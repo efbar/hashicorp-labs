@@ -35,6 +35,14 @@ job "ingress-gateway" {
                 name = "faasd-gateway"
                 hosts = ["faasd-gateway","faasd-gateway:8080" ]
               }
+              service {
+                name = "prometheus"
+                hosts = ["prometheus","prometheus:8080" ]
+              }
+              service {
+                name = "grafana"
+                hosts = ["grafana","grafana:8080" ]
+              }
             }
           }
         }
