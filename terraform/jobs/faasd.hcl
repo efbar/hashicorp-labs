@@ -100,7 +100,6 @@ job "faasd_bundle" {
 
     task "faasd_provider" {
       driver = "raw_exec"
-      user = "root"
       config {
         command = "/usr/local/bin/faasd"
         args = ["provider"]
@@ -194,6 +193,7 @@ job "faasd_bundle" {
         read_timeout="60s"
         write_timeout="60s"
         upstream_timeout="65s"
+        faas_prometheus_host="$${NOMAD_HOST_IP_gateway_http}"
         faas_nats_address="faasd-nats.service.consul"
         faas_nats_port="$${NOMAD_PORT_nats_tcp}"
         auth_proxy_url="http://faasd-basic-auth.service.consul:$${NOMAD_PORT_auth_http}/validate"
