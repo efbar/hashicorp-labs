@@ -560,7 +560,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(nomad_client_allocs_cpu_total_percent[5m:10s]) > 1",
+          "expr": "rate(nomad_client_allocs_cpu_total_percent[5m:10s])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
