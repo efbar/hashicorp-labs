@@ -12,6 +12,7 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
   - [Provision and deploy](#provision-and-deploy)
   - [Play with microservices](#play-with-microservices)
   - [OpenFaas in Nomad](#openfaas-in-nomad)
+    - [Monitoring OpenFaas](#monitoring-openfaas)
   - [Clean up](#clean-up)
 
 
@@ -46,6 +47,7 @@ To provision and deploy the workload simply do:
 ```
 
 At the end, if everything went fine, you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
+While Consul Ingress Gateway is listening at port `8080`, where you can find some preinstalled services.
 
 In Consul you should see something like:
 
@@ -57,8 +59,17 @@ While in Nomad:
 
 ## Play with microservices
 
-With the provided code you have deployed two microservices `minimal-service` and `minimal-service-2` that can talk to each other.
-Both are deployed with Envoy as sidecar, so they are inside the Consul service mesh.
+With the provided code you could deployed two microservices `minimal-service` and `minimal-service-2` that can talk to each other.
+
+If you go inside `terraform` folder and do:
+
+```bash
+terraform apply -var deploy_example_jobs=true -auto-approve
+```
+
+you'll find both in the cluster.
+
+Both are deployed by Nomad with Envoy as sidecar, so they are inside the Consul service mesh.
 
 Do some intra-services communication test:
 
@@ -93,7 +104,7 @@ with this command we go inside `minimal-service` container and execute a `GET` r
 
 ## OpenFaas in Nomad
 
-In this cluster we have also deployed `faasd`! So now we can reach OpenFaas gateway and use `OpenFaas` for our serverless testing!
+In this cluster, by default, we have also deployed `faasd`! So now we can reach OpenFaas gateway and use `OpenFaas` for our serverless testing!
 
 ![](images/faasd_task.png)
 
@@ -102,6 +113,16 @@ Just add `127.0.0.1 faasd-gateway` to your `/etc/hosts` file and you're done.
 Go to `http://faasd-gateway:8080` to enjoy the beautiful OpenFaas homepage.
 
 ![](images/openfaas.png)
+
+### Monitoring OpenFaas
+
+Add `127.0.0.1 grafana` to your `/etc/hosts` file and go to `http://grafana:8080`.
+Both dashboard are taken from Grafana dashboard repos with few modifications:
+- [Nomad jobs](https://grafana.com/grafana/dashboards/12787)
+  ![](images/grafana-nomad.png)
+- [Faasd](https://grafana.com/grafana/dashboards/11202)
+  ![](images/grafana-faasd.png)
+
 
 ## Clean up
 
