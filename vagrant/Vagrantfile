@@ -21,7 +21,7 @@ vault_home = "/srv/vault"
 # Consul variables
 consul_install = ["true", "1"].include?((ENV['CONSUL_INSTALL'] || true).to_s.downcase)
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.9.3"
+consul_version = ENV['CONSUL_VERSION'] || "1.9.4"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
@@ -42,18 +42,13 @@ nomad_home = "/srv/nomad"
 # Docker variables
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
 containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.3-3.1"
-docker_ce_version = ENV['DOCKER_CE_VERSION'] || "19.03.13-3"
+docker_ce_version = ENV['DOCKER_CE_VERSION'] || "20.10.3-3"
 envoy_version = ENV['ENVOY_VERSION'] || "1.16.2.p0.ge98e41a-1p71.gbe6132a"
 
 # Monitoring variables
 monitoring_install = ["true", "1"].include?((ENV['MONITORING_INSTALL'] || true).to_s.downcase)
 prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.23.0"
 grafana_version = ENV['GRAFANA_VERSION'] || "7.3.5-1"
-
-# Faasd variables
-faasd_install = ["true", "1"].include?((ENV['FAASD_INSTALL'] || true).to_s.downcase)
-faasd_version = ENV['FAASD_VERSION'] || "0.10.2"
-
 
 $nomad_setup = <<SCRIPT
 echo "Minimal configuration for Nomad UI"
@@ -171,14 +166,6 @@ Vagrant.configure("2") do |config|
     env: {
       "CONTAINERD_VERSION" => containerd_version,
       "DOCKER_CE_VERSION" => docker_ce_version,
-    }
-  end
-
-  if (faasd_install)
-    config.vm.provision "shell",
-    path: "scripts/faasd-install.sh",
-    env: {
-      "FAASD_VERSION" => faasd_version,
     }
   end
 
