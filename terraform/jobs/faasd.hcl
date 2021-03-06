@@ -98,6 +98,19 @@ job "faasd_bundle" {
         }
     }
 
+    task "download-faasd" {
+      lifecycle {
+        hook = "prestart"
+        sidecar = false
+      }
+
+      driver = "raw_exec"
+      config {
+        command = "sh"
+        args = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd && mv faasd /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
+      }
+    }
+
     task "faasd_provider" {
       driver = "raw_exec"
       config {
@@ -113,7 +126,7 @@ job "faasd_bundle" {
     task "nats" {
       driver = "docker"
       config {
-        image = "docker.io/library/nats-streaming:0.11.2"
+        image = "docker.io/library/nats-streaming:${faas_nats_version}"
         ports = ["nats_tcp", "nats_tcp_1"]
         entrypoint = ["/nats-streaming-server"]
         args = [
@@ -139,7 +152,7 @@ job "faasd_bundle" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/openfaas/basic-auth:0.20.5"
+        image = "ghcr.io/openfaas/basic-auth:${faas_auth_plugin_version}"
         ports = ["auth_http"]
         cap_add = [
           "CAP_NET_RAW",
@@ -172,7 +185,7 @@ job "faasd_bundle" {
     task "gateway" {
       driver = "docker"
       config {
-        image = "ghcr.io/openfaas/gateway:0.20.7"
+        image = "ghcr.io/openfaas/gateway:${faas_gateway_version}"
         ports = ["gateway_http", "gateway_mon"]
         cap_add = [
           "CAP_NET_RAW",
@@ -211,7 +224,7 @@ job "faasd_bundle" {
     task "queue-worker" {
       driver = "docker"
       config {
-        image = "docker.io/openfaas/queue-worker:0.11.2"
+        image = "docker.io/openfaas/queue-worker:${faas_queue_worker_version}"
         cap_add = [
           "CAP_NET_RAW",
         ]
