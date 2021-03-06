@@ -23,18 +23,22 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
 > Vagrant file is taken partially from here [hashicorp's nomad-guides](https://github.com/hashicorp/nomad-guides/tree/master/operations/provision-nomad/dev/vagrant-local)
 It's been revisited and modified (and it will be upgraded in the future).
 
-You can choose respective Hashicorp version with these environment variables:
+You can choose respective software versions with these environment variables:
 
 |  ENV | default version |
 |---|---|
-|  `CONSUL_VERSION`  |  `1.9.3` |
-|  `CNI_VERSION`  |  `0.9.0` |
-|  `VAULT_VERSION` |  `1.6.3` |
+|  `CONSUL_VERSION` | `1.9.4` |
+|  `CNI_VERSION` | `0.9.0` |
+|  `VAULT_VERSION` | `1.6.3` |
 |  `NOMAD_VERSION` | `1.0.4` |
 |  `CONTAINERD_VERSION` | `1.4.3-3.1` |
-|  `DOCKER_CE_VERSION` | `19.03.13-3` |
+|  `DOCKER_CE_VERSION` | `20.10.3-3` |
 |  `ENVOY_VERSION` | `1.16.2` |
-|  `FAASD_VERSION` | `0.10.2` |
+|  `TF_VAR_faasd_version` | `0.11.2` |
+|  `TF_VAR_faas_nats_version` | `0.11.2` |
+|  `TF_VAR_faas_auth_plugin_version` | `0.20.5` |
+|  `TF_VAR_faas_gateway_version` | `0.20.8` |
+|  `TF_VAR_faas_queue_worker_version` | `0.11.2` |
 
 ## Provision and deploy
 
