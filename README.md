@@ -25,20 +25,22 @@ It's been revisited and modified (and it will be upgraded in the future).
 
 You can choose respective software versions with these environment variables:
 
-|  ENV | default version |
-|---|---|
-|  `CONSUL_VERSION` | `1.9.4` |
-|  `CNI_VERSION` | `0.9.0` |
-|  `VAULT_VERSION` | `1.6.3` |
-|  `NOMAD_VERSION` | `1.0.4` |
-|  `CONTAINERD_VERSION` | `1.4.3-3.1` |
-|  `DOCKER_CE_VERSION` | `20.10.3-3` |
-|  `ENVOY_VERSION` | `1.16.2` |
-|  `TF_VAR_faasd_version` | `0.11.2` |
-|  `TF_VAR_faas_nats_version` | `0.11.2` |
-|  `TF_VAR_faas_auth_plugin_version` | `0.20.5` |
-|  `TF_VAR_faas_gateway_version` | `0.20.8` |
-|  `TF_VAR_faas_queue_worker_version` | `0.11.2` |
+|  ENV | description | default value |
+|---|---|---|
+|  `VAGRANT_CPU_NUM` | `Number of cpu used by VM` | `2` |
+|  `VAGRANT_MEM` | `Memory used by VM` | `8192` |
+|  `VAULT_VERSION` |`Vault version`| `1.6.3` |
+|  `CONSUL_VERSION` |`Consul version`| `1.9.4` |
+|  `NOMAD_VERSION` |`NOMAD version`| `1.0.4` |
+|  `CNI_VERSION` |`CNI plugin version`| `0.9.0` |
+|  `CONTAINERD_VERSION` |`Containerd version`| `1.4.3-3.1` |
+|  `DOCKER_CE_VERSION` |`Docker CE version`| `20.10.3-3` |
+|  `ENVOY_VERSION` |`Envoy version`| `1.16.2` |
+|  `TF_VAR_faasd_version` |`Faasd provider version`| `0.11.2` |
+|  `TF_VAR_faas_nats_version` |`NATS version version`| `0.11.2` |
+|  `TF_VAR_faas_auth_plugin_version` |`Faas Auth plugin version`| `0.20.5` |
+|  `TF_VAR_faas_gateway_version` |`Faas Gateway version`| `0.20.8` |
+|  `TF_VAR_faas_queue_worker_version` |`Faas Queue Worker version`| `0.11.2` |
 
 ## Provision and deploy
 
