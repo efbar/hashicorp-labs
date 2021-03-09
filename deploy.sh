@@ -19,7 +19,7 @@ echo -e "\033[32m
 
  For services UI:
 
-=> Vault:               http://localhost:8200
+=> Vault:               http://localhost:8200, pwd: root
 => Consul:              http://localhost:8500
 => Nomad:               http://localhost:4646
 => Minimal services:    http://localhost:8080
