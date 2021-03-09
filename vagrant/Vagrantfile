@@ -1,6 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Computing
+vagrant_cpu_num = ENV['VAGRANT_CPU_NUM'] || 2
+vagrant_mem = ENV['VAGRANT_MEM'] || 8192
+
 # Networking
 private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 
@@ -63,21 +67,21 @@ Vagrant.configure("2") do |config|
 
    # Increase memory for Parallels Desktop
    config.vm.provider "parallels" do |p, o|
-    p.memory = 8192
-    p.cpus = 2
+    p.memory = vagrant_mem
+    p.cpus = vagrant_cpu_num
   end
 
   # Increase memory for Virtualbox
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = 8192
-    vb.cpus = 2
+    vb.memory = vagrant_mem
+    vb.cpus = vagrant_cpu_num
   end
 
   # Increase memory for VMware
   ["vmware_fusion", "vmware_workstation"].each do |p|
     config.vm.provider p do |v|
-      v.vmx["memsize"] = 8192
-      v.vmx["numvcpus"] = 2
+      v.vmx["memsize"] = vagrant_mem
+      v.vmx["numvcpus"] = vagrant_cpu_num
     end
   end
 
