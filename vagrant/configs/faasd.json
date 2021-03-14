@@ -444,7 +444,7 @@
             "steppedLine": false,
             "targets": [
               {
-                "expr": "(rate(gateway_functions_seconds_sum[20s]) / rate(gateway_functions_seconds_count[20s]))",
+                "expr": "(rate(gateway_functions_seconds_sum[30s]) / rate(gateway_functions_seconds_count[30s]))",
                 "format": "time_series",
                 "intervalFactor": 2,
                 "legendFormat": "{{function_name}} ",
@@ -533,7 +533,7 @@
             "steppedLine": false,
             "targets": [
               {
-                "expr": "rate (gateway_function_invocation_total [20s])",
+                "expr": "rate (gateway_function_invocation_total [30s])",
                 "format": "time_series",
                 "interval": "",
                 "intervalFactor": 2,
@@ -604,7 +604,7 @@
             "span": 6,
             "targets": [
               {
-                "expr": "(rate(gateway_functions_seconds_sum[20s]) / rate(gateway_functions_seconds_count[20s]))",
+                "expr": "(rate(gateway_functions_seconds_sum[30s]) / rate(gateway_functions_seconds_count[30s]))",
                 "format": "time_series",
                 "intervalFactor": 2,
                 "legendFormat": "{{function_name}} ",
