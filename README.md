@@ -23,7 +23,7 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
 > Vagrant file is taken partially from here [hashicorp's nomad-guides](https://github.com/hashicorp/nomad-guides/tree/master/operations/provision-nomad/dev/vagrant-local)
 It's been revisited and modified (and it will be upgraded in the future).
 
-You can choose respective software versions with these environment variables:
+You can choose respective software versions and VM specs with these environment variables:
 
 |  ENV | description | default value |
 |---|---|---|
