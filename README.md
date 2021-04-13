@@ -29,7 +29,7 @@ You can choose respective software versions and VM specs with these environment 
 |---|---|---|
 |  `VAGRANT_CPU_NUM` | `Number of cpu used by VM` | `2` |
 |  `VAGRANT_MEM` | `Memory used by VM` | `8192` |
-|  `VAULT_VERSION` |`Vault version`| `1.6.3` |
+|  `VAULT_VERSION` |`Vault version`| `1.7.0` |
 |  `CONSUL_VERSION` |`Consul version`| `1.9.4` |
 |  `NOMAD_VERSION` |`NOMAD version`| `1.0.4` |
 |  `CNI_VERSION` |`CNI plugin version`| `0.9.0` |
