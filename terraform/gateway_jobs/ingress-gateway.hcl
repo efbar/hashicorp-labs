@@ -1,6 +1,6 @@
 job "ingress-gateway" {
 
-  datacenters = ["dc1"]
+  datacenters = ["${dc_name}"]
 
   group "ingress-group" {
 
@@ -14,7 +14,7 @@ job "ingress-gateway" {
 
     service {
       name = "ingress-service"
-      port = "8080"
+      port = "inbound"
 
       connect {
         gateway {

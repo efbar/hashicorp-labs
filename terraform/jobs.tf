@@ -20,6 +20,9 @@ resource "nomad_job" "jobs" {
 }
 
 resource "nomad_job" "gateway_jobs" {
+  hcl2 {
+    enabled = true
+  }
   for_each = local.gateway_jobs
   jobspec = templatefile(
     each.value,
