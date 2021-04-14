@@ -5,7 +5,7 @@ job "terminating-gateway" {
   group "terminating-group" {
 
     network {
-      mode = "bridge"
+      mode = "host"
       port "inbound" {
         static = 8088
         to     = 8080
