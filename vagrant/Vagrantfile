@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Vagrantfile version
+vagrantfile_tag = ENV['VF_TAG'] || "1.0.1"
+
 # Computing
 vagrant_cpu_num = ENV['VAGRANT_CPU_NUM'] || 2
 vagrant_mem = ENV['VAGRANT_MEM'] || 8192
@@ -61,6 +64,7 @@ sudo systemctl restart nomad
 SCRIPT
 
 Vagrant.configure("2") do |config|
+  config.vm.define "hashicorp-labs"
 
   # Use vagrant insecure public key, comment this out to restrict access
   config.ssh.insert_key = false
@@ -73,6 +77,7 @@ Vagrant.configure("2") do |config|
 
   # Increase memory for Virtualbox
   config.vm.provider "virtualbox" do |vb|
+    vb.name = "hashicorp-labs-#{vagrantfile_tag}"
     vb.memory = vagrant_mem
     vb.cpus = vagrant_cpu_num
   end
@@ -80,6 +85,7 @@ Vagrant.configure("2") do |config|
   # Increase memory for VMware
   ["vmware_fusion", "vmware_workstation"].each do |p|
     config.vm.provider p do |v|
+      v.name = "hashicorp-labs-#{vagrantfile_tag}"
       v.vmx["memsize"] = vagrant_mem
       v.vmx["numvcpus"] = vagrant_cpu_num
     end
