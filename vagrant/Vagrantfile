@@ -18,7 +18,7 @@ box_version = ENV['BOX_VERSION'] || "202012.21.0"
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-vault_version = ENV['VAULT_VERSION'] || "1.7.0"
+vault_version = ENV['VAULT_VERSION'] || "1.7.1"
 vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
 vault_user = "vault"
@@ -97,7 +97,7 @@ Vagrant.configure("2") do |config|
 
   # Set box version
   config.vm.box = base_box
-  config.vm.box_version = box_version
+  #config.vm.box_version = box_version
 
   # Set hostname
   config.vm.hostname = "nomad"
