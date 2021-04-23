@@ -193,7 +193,11 @@ Vagrant.configure("2") do |config|
     }
   end
 
-   config.vm.post_up_message = "
+  config.ssh.username = 'root'
+  config.ssh.password = 'vagrant'
+  config.ssh.insert_key = 'true'
+
+  config.vm.post_up_message = "
 Done!
 
 You can reach services at:
