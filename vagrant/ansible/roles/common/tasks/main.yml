@@ -1,0 +1,34 @@
+---
+# tasks file for common
+- name: Set UTC timezone
+  timezone: 
+    name: Etc/UTC
+  become: yes
+  tags:
+  - time
+
+# - name: Add releases-optional repository
+#   shell: yum-config-manager --enable rhui-REGION-rhel-server-releases-optional
+
+# - name: Add supplementary repository
+#   shell: yum-config-manager --enable rhui-REGION-rhel-server-supplementary
+
+# - name: Add extras repository
+#   shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
+
+- name: Check for updates
+  yum:
+    list: updates
+    update_cache: true
+
+- name: Install base packages
+  yum:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+
+- name: Enable and start NTP service
+  ansible.builtin.service:
+    name: ntpd
+    enabled: yes
+    state: started
