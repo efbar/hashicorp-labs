@@ -13,6 +13,7 @@ It will deploy a cluster for `Vault`, `Consul` and `Nomad` where each component 
   - [Play with microservices](#play-with-microservices)
   - [OpenFaas in Nomad](#openfaas-in-nomad)
     - [Monitoring OpenFaas](#monitoring-openfaas)
+    - [Docker login (for OpenFAAS)](#docker-login-for-openfaas)
   - [Clean up](#clean-up)
 
 
@@ -129,6 +130,24 @@ Both dashboard are taken from Grafana dashboard repos with few modifications:
 - [Faasd](https://grafana.com/grafana/dashboards/11202)
   ![](images/grafana-faasd.png)
 
+### Docker login (for OpenFAAS)
+
+OpenFaas needs docker credentials to pull and push images.
+
+The utility script `docker-login-faasd.sh` does that:
+
+```
+$ ./docker-login.sh <username> <password>
+Docker login for Faasd..
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Connection to 127.0.0.1 closed.
+ 
+Done.
+```
 
 ## Clean up
 
