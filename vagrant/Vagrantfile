@@ -13,7 +13,7 @@ private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 
 # Base box selection
 base_box = ENV['BASE_BOX'] || "bento/centos-7"
-box_version = ENV['BOX_VERSION'] || "202012.21.0"
+box_version = ENV['BOX_VERSION'] || "202103.18.0"
 
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
