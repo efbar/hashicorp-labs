@@ -1,0 +1,209 @@
+---
+# tasks file for consul
+- name: Add Consul group
+  ansible.builtin.group:
+    name: "{{ consul_group }}"
+    state: present
+    system: true
+
+- name: Add Consul user
+  ansible.builtin.user:
+    name: "{{ consul_user }}"
+    comment: "{{ consul_user }} user"
+    group: "{{consul_group }}"
+    system: true
+    create_home: false
+    home: "{{ consul_home }}"
+
+- name: Create Consul user home dir and perms
+  ansible.builtin.file:
+    path: "{{ consul_home }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Change ownership of Consul user directory
+  ansible.builtin.file:
+    path: "{{ consul_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+
+- name: Download and extract Consul binary
+  ansible.builtin.unarchive:
+    src: "{{ consul_url }}"
+    dest: "{{ consul_dir }}"
+    remote_src: yes
+
+- name: Change mode and ownership of Consul executable
+  ansible.builtin.file:
+    path: "{{ consul_path }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+
+- name: Create Consul config, data and tls dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    recurse: yes
+  with_items: ["{{ consul_config_dir }}","{{ consul_tls_dir }}","{{ consul_data_dir }}"]
+
+- name: Set Consul config dir permissions 
+  ansible.builtin.file:
+    path: "{{ consul_config_dir }}/*"
+    state: directory
+    recurse: yes
+    mode: '0644'
+
+- name: Set Consul profile script
+  copy:
+    content: "export CONSUL_HTTP_ADDR=http://127.0.0.1:8500"
+    dest: "{{ consul_profile_script }}"
+
+- name: Give Consul user shell access for remote exec
+  ansible.builtin.user:
+    name: "{{ consul_user }}"
+    shell: /bin/bash
+    append: yes
+
+- name: Allow Consul sudo access for echo, tee, cat, sed, and systemctl
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers.d/consul"
+    line: "consul ALL=(ALL) NOPASSWD: /usr/bin/echo, /usr/bin/tee, /usr/bin/cat, /usr/bin/sed, /usr/bin/systemctl"
+    create: yes
+  become: yes
+
+- name: Add prometheus and grafana service
+  copy:
+    src: '{{ item }}'
+    dest: "{{ consul_config_dir }}"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    mode: '0755'
+  loop:
+    - files/prometheus-service.json
+    - files/grafana-service.json
+
+- name: Install dnsmasq
+  yum:
+    name: "dnsmasq"
+    state: present
+    update_cache: yes
+
+- name: Update resolv.conf
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    insertbefore: BOF
+    line: 'nameserver 127.0.0.1'
+  become: yes
+
+- name: Configuring dnsmasq to forward .consul requests to consul port 8600
+  copy:
+    content: "server=/consul/127.0.0.1#8600"
+    dest: /etc/dnsmasq.d/consul
+
+- name: Enable and start DNSmasq service
+  ansible.builtin.service:
+    name: dnsmasq.service
+    enabled: yes
+    state: started
+
+
+- name: Set consul systemd service
+  blockinfile:
+    create: yes
+    block: |
+      [Unit]
+      Description=Consul Agent
+      Requires=network-online.target
+      After=network-online.target
+
+      [Service]
+      Restart=on-failure
+      RestartSec=4
+      ExecStart={{ consul_path }} agent {{ consul_flags }} -data-dir {{ consul_data_dir }} -config-dir {{ consul_config_dir }}
+      ExecReload=/bin/kill -HUP $MAINPID
+      KillSignal=SIGTERM
+      User={{ consul_user }}
+      Group={{ consul_group }}
+
+      [Install]
+      WantedBy=multi-user.target
+    path: /etc/systemd/system/consul.service
+
+- name: Change mode of Consul service file
+  ansible.builtin.file:
+    path: /etc/systemd/system/consul.service
+    mode: '0644'
+
+- name: Enable and start Consul service
+  ansible.builtin.service:
+    name: consul
+    enabled: yes
+    state: started
+
+- name: Create Envoy dir
+  ansible.builtin.file:
+    path: /opt/getenvoy/bin
+    state: directory
+    mode: '0644'
+  tags: [ envoy ]
+
+- name: Download and extract Envoy binary
+  get_url:
+    url: "{{envoy_url}}"
+    dest: /tmp
+  ignore_errors: yes
+  tags: [ envoy ]
+
+- name: Check if downloaded
+  stat:
+    path: /tmp/getenvoy-envoy-{{envoy_version}}.x86_64.rpm
+  register: envoy_rpm
+
+- name: Install Envoy
+  yum:
+    name: /tmp/getenvoy-envoy-{{envoy_version}}.x86_64.rpm
+  when: envoy_rpm.stat.exists
+
+- name: Check for files existance
+  stat:
+    path: /opt/getenvoy/bin/envoy
+  register: envoy_bin
+
+- name: Copy Envoy binary if it exists
+  copy:
+    src: /opt/getenvoy/bin/envoy
+    dest: /usr/bin/envoy
+    mode: a+x
+    remote_src: yes
+  become: yes
+  when: envoy_bin.stat.exists
+
+- name: Create CNI dir
+  ansible.builtin.file:
+    path: /opt/cni/bin
+    state: directory
+    mode: '0644'
+  tags: [ cni ]
+
+- name: Download and extract CNI binary
+  ansible.builtin.unarchive:
+    src: "{{cni_url}}"
+    dest: /opt/cni/bin
+    remote_src: yes
+  ignore_errors: yes
+  tags: [ cni ]
+
+- name: Set net bridge for iptables
+  copy:
+    content: "net.bridge.bridge-nf-call-arptables = 1\nnet.bridge.bridge-nf-call-ip6tables = 1\nnet.bridge.bridge-nf-call-iptables = 1"
+    dest: "/etc/sysctl.d/bridge.conf"
+  become: yes
+  tags: [ cni ]
+

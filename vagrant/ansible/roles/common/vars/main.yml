@@ -11,3 +11,4 @@ packages:
   - bind-utils
   - tcpdump
   - nc
+  - vim

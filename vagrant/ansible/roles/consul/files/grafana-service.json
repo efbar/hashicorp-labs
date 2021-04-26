@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "grafana",
+    "tags": [
+      "monitoring"
+    ],
+    "port": 3000,
+    "check": {
+      "http": "http://localhost:3000/api/health",
+      "interval": "30s"
+    }
+  }
+}

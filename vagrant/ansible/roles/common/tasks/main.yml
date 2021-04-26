@@ -7,15 +7,6 @@
   tags:
   - time
 
-# - name: Add releases-optional repository
-#   shell: yum-config-manager --enable rhui-REGION-rhel-server-releases-optional
-
-# - name: Add supplementary repository
-#   shell: yum-config-manager --enable rhui-REGION-rhel-server-supplementary
-
-# - name: Add extras repository
-#   shell: yum-config-manager --enable rhui-REGION-rhel-server-extras
-
 - name: Check for updates
   yum:
     list: updates

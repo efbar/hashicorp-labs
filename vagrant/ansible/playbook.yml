@@ -12,3 +12,10 @@
   roles:
     - vault
   tags: [ vault ]
+
+- name: Consul installation
+  hosts: all
+  become: yes
+  roles:
+    - consul
+  tags: [ consul, envoy ]
