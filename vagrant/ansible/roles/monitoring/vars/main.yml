@@ -1,0 +1,4 @@
+---
+# vars file for monitoring
+prometheus_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+grafana_url: "https://dl.grafana.com/oss/release/grafana-{{ grafana_version }}.x86_64.rpm"
