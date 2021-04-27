@@ -19,3 +19,24 @@
   roles:
     - consul
   tags: [ consul, envoy ]
+
+- name: Nomad installation
+  hosts: all
+  become: yes
+  roles:
+    - nomad
+  tags: [ nomad ]
+
+- name: Docker installation
+  hosts: all
+  become: yes
+  roles:
+    - docker
+  tags: [ docker ]
+
+- name: Monitoring installation
+  hosts: all
+  become: yes
+  roles:
+    - monitoring
+  tags: [ monitoring ]
