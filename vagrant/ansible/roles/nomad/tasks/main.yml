@@ -1,0 +1,112 @@
+---
+# tasks file for nomad
+- name: Add Nomad group
+  ansible.builtin.group:
+    name: "{{ nomad_group }}"
+    state: present
+    system: true
+
+- name: Add Nomad user
+  ansible.builtin.user:
+    name: "{{ nomad_user }}"
+    comment: "{{ nomad_user }} user"
+    group: "{{nomad_group }}"
+    system: true
+    create_home: false
+    home: "{{ nomad_home }}"
+
+- name: Create Nomad user home dir and perms
+  ansible.builtin.file:
+    path: "{{ nomad_home }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Change ownership of Nomad user directory
+  ansible.builtin.file:
+    path: "{{ nomad_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+
+- name: Download and extract Nomad binary
+  ansible.builtin.unarchive:
+    src: "{{ nomad_url }}"
+    dest: "{{ nomad_dir }}"
+    remote_src: yes
+
+- name: Change mode and ownership of Nomad executable
+  ansible.builtin.file:
+    path: "{{ nomad_path }}"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    mode: '0755'
+
+- name: Create Nomad config, data and tls dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    recurse: yes
+  with_items: ["{{ nomad_config_dir }}","{{ nomad_tls_dir }}","{{ nomad_data_dir }}"]
+
+- name: Set Nomad config dir permissions 
+  ansible.builtin.file:
+    path: "{{ nomad_config_dir }}"
+    state: directory
+    recurse: yes
+    mode: '0644'
+
+- name: Set Nomad profile script
+  copy:
+    content: "export NOMAD_ADDR=http://127.0.0.1:4646"
+    dest: "{{ nomad_profile_script }}"
+
+- name: Give Nomad user shell access for remote exec
+  ansible.builtin.user:
+    name: "{{ nomad_user }}"
+    shell: /bin/bash
+    append: yes
+
+- name: Add Nomad config
+  copy:
+    src: 'files/nomad.conf'
+    dest: "{{ nomad_config_dir }}"
+    owner: "{{ nomad_user }}"
+    group: "{{ nomad_group }}"
+    mode: '0644'
+
+- name: Set Nomad systemd service
+  blockinfile:
+    create: yes
+    block: |
+      [Unit]
+      Description=Nomad Agent
+      Requires=nomad.service
+
+      [Service]
+      Restart=on-failure
+      RestartSec=4
+      ExecStart=/usr/local/bin/nomad agent -config {{ nomad_config_dir }}/nomad.conf  -data-dir {{ nomad_data_dir }} {{ nomad_flags }}
+      ExecReload=/bin/kill -HUP $MAINPID
+      KillSignal=SIGTERM
+      User=root
+      Group=root
+
+      [Install]
+      WantedBy=multi-user.target
+    path: /etc/systemd/system/nomad.service
+
+- name: Change mode of nomad_dir service file
+  ansible.builtin.file:
+    path: /etc/systemd/system/nomad.service
+    mode: '0644'
+
+- name: Enable and start Nomad service
+  ansible.builtin.service:
+    name: nomad
+    enabled: yes
+    state: started
