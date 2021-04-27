@@ -8,4 +8,3 @@ nomad_config_dir: /etc/nomad.d
 nomad_data_dir: /opt/nomad/data
 nomad_tls_dir: /opt/nomad/tls
 nomad_profile_script: /etc/profile.d/nomad.sh
-nomad_flags: "-dev -bind 0.0.0.0"

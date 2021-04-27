@@ -90,7 +90,7 @@
       [Service]
       Restart=on-failure
       RestartSec=4
-      ExecStart=/usr/local/bin/nomad agent -config {{ nomad_config_dir }}/nomad.conf  -data-dir {{ nomad_data_dir }} {{ nomad_flags }}
+      ExecStart=/usr/local/bin/nomad agent -config {{ nomad_config_dir }}/nomad.conf  -data-dir {{ nomad_data_dir }}
       ExecReload=/bin/kill -HUP $MAINPID
       KillSignal=SIGTERM
       User=root
