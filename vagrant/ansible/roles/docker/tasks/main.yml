@@ -1,0 +1,48 @@
+---
+# tasks file for docker
+- name: Download Containerd and Docker pkgs
+  get_url:
+    url: "{{ item }}"
+    dest: /tmp
+  loop:
+    - "{{ containerd_url }}"
+    - "{{ docker_ce_rootless_extras_url }}"
+    - "{{ docker_ce_url }}"
+    - "{{ docker_ce_cli_url }}"
+  register: downloaded_files
+  tags: [ docker ]
+
+- name: Get rpm files list
+  find:
+    paths: 
+      - /tmp
+    patterns: "*.rpm"
+  register: rpm_files
+
+- name: Get deps
+  set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list}}"
+
+- name: Install Containerd and Docker
+  yum:
+    name: "{{rpm_list}}"
+    state: present
+
+- name: Add Nomad user to Docker group
+  ansible.builtin.user:
+    name: "{{ nomad_user }}"
+    groups: docker
+    state: present
+
+- name: Update Docker opts
+  ansible.builtin.lineinfile:
+    path: /etc/default/docker
+    line: "{{ docker_opts }}"
+    create: yes
+  become: yes
+
+- name: Enable and start Docker service
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+    state: started

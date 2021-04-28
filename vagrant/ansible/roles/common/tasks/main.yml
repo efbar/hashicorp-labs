@@ -1,0 +1,25 @@
+---
+# tasks file for common
+- name: Set UTC timezone
+  timezone: 
+    name: Etc/UTC
+  become: yes
+  tags:
+  - time
+
+- name: Check for updates
+  yum:
+    list: updates
+    update_cache: true
+
+- name: Install base packages
+  yum:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+
+- name: Enable and start NTP service
+  ansible.builtin.service:
+    name: ntpd
+    enabled: yes
+    state: started

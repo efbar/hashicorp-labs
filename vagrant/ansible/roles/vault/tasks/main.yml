@@ -1,0 +1,104 @@
+---
+# tasks file for vault
+- name: Add Vault group
+  ansible.builtin.group:
+    name: "{{vault_group}}"
+    state: present
+    system: true
+
+- name: Add Vault user
+  ansible.builtin.user:
+    name: "{{vault_user}}"
+    comment: "{{ vault_user }} user"
+    group: "{{vault_group}}"
+    system: true
+    create_home: false
+    home: "{{ vault_home }}"
+
+- name: Create Vault home dir and perms
+  ansible.builtin.file:
+    path: "{{ vault_home }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Change ownership of Vault directory
+  ansible.builtin.file:
+    path: "{{ vault_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{vault_user}}"
+    group: "{{vault_group}}"
+
+- name: Download and extract Vault binary
+  ansible.builtin.unarchive:
+    src: "{{vault_url}}"
+    dest: "{{vault_dir}}"
+    remote_src: yes
+
+- name: Change mode of Vault executable
+  ansible.builtin.file:
+    path: "{{ vault_path }}"
+    mode: '0755'
+
+- name: Change ownership of Vault executable
+  ansible.builtin.file:
+    path: "{{ vault_path }}"
+    owner: "{{vault_user}}"
+    group: "{{vault_group}}"
+
+- name: Create Vault config, data and tls dir
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0644'
+  with_items: ["{{ vault_config_dir }}","{{ vault_tls_dir }}","{{vault_data_dir}}"]
+
+- name: Set Vault profile script
+  copy:
+    content: "export VAULT_ADDR=http://127.0.0.1:8200\nexport VAULT_TOKEN=root"
+    dest: "{{ vault_profile_script }}"
+
+- name: Set cap_ipc_lock+ep on {{ vault_path }}
+  capabilities:
+    path: "{{ vault_path }}"
+    capability: cap_ipc_lock+ep
+    state: present
+
+- name: Set Vault systemd service
+  blockinfile:
+    create: yes
+    block: |
+      [Unit]
+      Description=Vault Agent
+
+      [Service]
+      Restart=on-failure
+      StartLimitIntervalSec=5
+      PermissionsStartOnly=true
+      ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/bin/vault
+      ExecStart=/usr/local/bin/vault server -config /etc/vault.d {{ vault_flags }}
+      ExecReload=/bin/kill -HUP $MAINPID
+      KillSignal=SIGTERM
+      User={{vault_user}}
+      Group={{vault_group}}
+      LimitMEMLOCK=infinity
+
+      [Install]
+      WantedBy=multi-user.target
+    path: /etc/systemd/system/vault.service
+
+- name: Change mode of Vault service file
+  ansible.builtin.file:
+    path: /etc/systemd/system/vault.service
+    mode: '0644'
+
+- name: Enable Vault service
+  ansible.builtin.service:
+    name: vault.service
+    enabled: yes
+
+- name: Start Vault service
+  ansible.builtin.service:
+    name: vault.service
+    state: started

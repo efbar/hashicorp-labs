@@ -1,0 +1,11 @@
+---
+# vars file for vault
+vault_zip: vault_{{ vault_version }}_linux_amd64.zip
+vault_url: "https://releases.hashicorp.com/vault/{{ vault_version }}/{{ vault_zip }}"
+vault_dir: /usr/local/bin
+vault_path: "{{ vault_dir }}/vault"
+vault_config_dir: /etc/vault.d
+vault_data_dir: /opt/vault/data
+vault_tls_dir: /opt/vault/tls
+vault_profile_script: /etc/profile.d/vault.sh
+vault_flags: "-dev -dev-ha -dev-transactional -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200"

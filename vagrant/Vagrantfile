@@ -19,7 +19,6 @@ box_version = ENV['BOX_VERSION'] || "202103.18.0"
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
 vault_version = ENV['VAULT_VERSION'] || "1.7.1"
-vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
 vault_user = "vault"
 vault_comment = "Vault"
@@ -29,7 +28,6 @@ vault_home = "/srv/vault"
 consul_install = ["true", "1"].include?((ENV['CONSUL_INSTALL'] || true).to_s.downcase)
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
 consul_version = ENV['CONSUL_VERSION'] || "1.9.5"
-consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
 consul_comment = "Consul"
@@ -41,7 +39,6 @@ cni_version = ENV['CNI_VERSION'] || "0.9.0"
 nomad_install = ["true", "1"].include?((ENV['NOMAD_INSTALL'] || true).to_s.downcase)
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
 nomad_version = ENV['NOMAD_VERSION'] || "1.0.4"
-nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "nomad"
 nomad_user = "nomad"
 nomad_home = "/srv/nomad"
@@ -56,12 +53,6 @@ envoy_version = ENV['ENVOY_VERSION'] || "1.16.2.p0.ge98e41a-1p71.gbe6132a"
 monitoring_install = ["true", "1"].include?((ENV['MONITORING_INSTALL'] || true).to_s.downcase)
 prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.23.0"
 grafana_version = ENV['GRAFANA_VERSION'] || "7.3.5-1"
-
-$nomad_setup = <<SCRIPT
-echo "Minimal configuration for Nomad UI"
-sudo cp /tmp/nomad.hcl /etc/nomad.d/nomad.hcl
-sudo systemctl restart nomad
-SCRIPT
 
 Vagrant.configure("2") do |config|
   config.vm.define "hashicorp-labs"
@@ -97,100 +88,67 @@ Vagrant.configure("2") do |config|
 
   # Set box version
   config.vm.box = base_box
-  #config.vm.box_version = box_version
+  config.vm.box_version = box_version
 
   # Set hostname
   config.vm.hostname = "nomad"
-
-  # Bootstrap the vm
-  config.vm.provision "shell",
-  path: "scripts/base-setup.sh"
+  
+  ansible_tags = ['common']
+  # Forward Vault port
+  if (vault_install)
+    config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
+    ansible_tags.concat(['vault'])
+  end
+  if (consul_install)
+    config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
+    ansible_tags.concat(['consul', 'envoy'])
+  end
+  if (cni_install)
+    ansible_tags.concat(['cni'])
+  end
+  if (nomad_install)
+    config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
+    ansible_tags.concat(['nomad'])
+  end
+  if (docker_install)
+    config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
+    ansible_tags.concat(['docker'])
+  end
+  if (monitoring_install)
+    ansible_tags.concat(['monitoring'])
+  end
+  
+  config.vm.provision :ansible_local do |ansible|
+    ansible.playbook = "ansible/playbook.yml"
+    ansible.inventory_path = "ansible/inventory"
+    ansible.config_file = "ansible/ansible.cfg"
+	  ansible.limit = 'all'
+	  ansible.tags = ansible_tags
+    # ansible.verbose = '-vvv'
+    ansible.extra_vars = {
+      vault_group: vault_group,
+      vault_user: vault_user,
+      vault_home: vault_home,
+      vault_version: vault_version,
+      consul_group: consul_group,
+      consul_user: consul_user,
+      consul_home: consul_home,
+      consul_version: consul_version,
+      envoy_version: envoy_version,
+      cni_version: cni_version,
+      nomad_group: nomad_group,
+      nomad_user: nomad_user,
+      nomad_home: nomad_home,
+      nomad_version: nomad_version,
+      containerd_version: containerd_version,
+      docker_ce_version: docker_ce_version,
+      prometheus_version: prometheus_version,
+      grafana_version: grafana_version,
+    }
 
   # Forward Ingress port
   config.vm.network :forwarded_port, guest: 8080, host: 8080, auto_correct: true
 
-  if (vault_install)
-    # Forward Vault port
-    config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
-
-    # Install Vault
-    config.vm.provision "shell",
-    path: "scripts/vault-install.sh",
-    env: {
-      "GROUP" => vault_group,
-      "USER" => vault_user,
-      "COMMENT" => vault_comment,
-      "HOME" => vault_home,
-      "VERSION" => vault_version,
-      "URL" => vault_ent_url,
-    }
-  end
-
-  if (consul_install)
-    # Forward Consul port
-    config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
-
-    # Install Consul
-    config.vm.provision "file", source: "configs/prometheus-service.json", destination: "/tmp/prometheus-service.json"
-    config.vm.provision "file", source: "configs/grafana-service.json", destination: "/tmp/grafana-service.json"
-    config.vm.provision "shell",
-    path: "scripts/consul-install.sh",
-    env: {
-      "GROUP" => consul_group,
-      "USER" => consul_user,
-      "COMMENT" => consul_comment,
-      "HOME" => consul_home,
-      "VERSION" => consul_version,
-      "URL" => consul_ent_url,
-      "USER" => consul_user,
-      "GROUP" => consul_group,
-      "ENVOY_VERSION" => envoy_version,
-      "CNI_VERSION" => cni_version,
-      "CNI_INSTALL" => cni_install,
-      "PRIVATE_IP" => private_ip,
-    }
-  end
-
-  if (nomad_install)
-    # Forward Nomad port
-    config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
-
-    # Install Nomad
-    config.vm.provision "shell",
-    path: "scripts/nomad-install.sh",
-    env: {
-      "VERSION" => nomad_version,
-      "URL" => nomad_ent_url,
-      "USER" => nomad_user,
-      "GROUP" => nomad_group,
-      "HOME" => nomad_home
-    }
-
-    config.vm.provision "file", source: "configs/nomad.conf", destination: "/tmp/nomad.hcl"
-    config.vm.provision "shell", inline: $nomad_setup, privileged: false
-  end
-
-  if (docker_install)
-    config.vm.provision "shell",
-    path: "scripts/docker-install.sh",
-    env: {
-      "CONTAINERD_VERSION" => containerd_version,
-      "DOCKER_CE_VERSION" => docker_ce_version,
-    }
-  end
-
-  if (monitoring_install)
-    config.vm.provision "file", source: "configs/prometheus.yml", destination: "/tmp/prometheus.yml"
-    config.vm.provision "file", source: "configs/prometheus-ds.yaml", destination: "/tmp/prometheus-ds.yaml"
-    config.vm.provision "file", source: "configs/dashboard-provision.yaml", destination: "/tmp/dashboard-provision.yaml"
-    config.vm.provision "file", source: "configs/faasd.json", destination: "/tmp/faasd.json"
-    config.vm.provision "file", source: "configs/nomad-jobs.json", destination: "/tmp/nomad-jobs.json"
-    config.vm.provision "shell",
-    path: "scripts/monitoring-install.sh",
-    env: {
-      "PROMETHEUS_VERSION" => prometheus_version,
-      "GRAFANA_VERSION" => grafana_version,
-    }
   end
 
   config.ssh.username = 'root'

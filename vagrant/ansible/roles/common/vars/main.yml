@@ -1,0 +1,14 @@
+---
+# vars file for common
+packages:
+  - ntp
+  - git
+  - wget
+  - unzip
+  - jq
+  - dnsmasq
+  - java-1.8.0-openjdk
+  - bind-utils
+  - tcpdump
+  - nc
+  - vim

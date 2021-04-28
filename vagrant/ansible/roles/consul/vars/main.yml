@@ -1,0 +1,13 @@
+---
+# vars file for consul
+consul_zip: consul_{{ consul_version }}_linux_amd64.zip
+consul_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_zip }}"
+consul_dir: /usr/local/bin
+consul_path: "{{ consul_dir }}/consul"
+consul_config_dir: /etc/consul.d
+consul_data_dir: /opt/consul/data
+consul_tls_dir: /opt/consul/tls
+consul_profile_script: /etc/profile.d/consul.sh
+consul_flags: "-dev -ui -client 0.0.0.0"
+envoy_url: https://tetrate.bintray.com/getenvoy-rpm/centos/7/x86_64/stable/Packages/getenvoy-envoy-{{ envoy_version }}.x86_64.rpm
+cni_url: https://github.com/containernetworking/plugins/releases/download/v{{ cni_version }}/cni-plugins-linux-amd64-v{{ cni_version }}.tgz
