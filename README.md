@@ -64,6 +64,8 @@ While in Nomad:
 
 ![](images/nomad.png)
 
+You can disable `terraform apply`ing by set the environment variable `TERRAFORM_LABS` to `false`. This will only provision the Hashicorp stack without deploying in Nomad.
+
 ## Play with microservices
 
 With the provided code you could deployed two microservices `minimal-service` and `minimal-service-2` that can talk to each other.
