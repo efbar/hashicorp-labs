@@ -4,34 +4,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-
 echo -e "\033[32mPerforming some checks: binaries, versions ..\033[0m"
-if ! command -v vagrant &> /dev/null
-then
-    echo "Vagrant binary could not be found"
-    exit 1
-fi
-
-if ! command -v terraform &> /dev/null
-then
-    echo "Terraform binary could not be found"
-    exit 1
-fi
-
-tfversion=$(terraform version | awk 'NR==1{gsub("v0.",""); print $2}')
-if ! command -v vagrant &> /dev/null
-then
-    echo "Vagrant binary could not be found"
-    exit 1
-fi
-
-if ! command -v terraform &> /dev/null
-then
-    echo "Terraform binary could not be found"
-    exit 1
-fi
-
-tfversion=$(terraform version | awk 'NR==1{gsub("v0.",""); print $2}')
 if ! command -v vagrant &> /dev/null
 then
     echo "Vagrant binary could not be found"
