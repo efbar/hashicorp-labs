@@ -1,0 +1,15 @@
+---
+- name: Perform maintenance tasks
+  block:
+    - name: Confirm that Vault is healthy
+      uri:
+        url: "http://localhost:8200/v1/sys/health"
+        status_code: 200
+    - name: Confirm that Consul is healthy
+      uri:
+        url: "http://localhost:8500/v1/status/leader"
+        status_code: 200
+    - name: Confirm that Nomad is healthy
+      uri:
+        url: "http://localhost:4646/v1/status/leader"
+        status_code: 200

@@ -40,3 +40,10 @@
   roles:
     - monitoring
   tags: [ monitoring ]
+
+- name: Testing endpoints
+  hosts: all
+  gather_facts: no
+  roles:
+    - tests
+  tags: [ tests ]

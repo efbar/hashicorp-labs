@@ -54,6 +54,9 @@ monitoring_install = ["true", "1"].include?((ENV['MONITORING_INSTALL'] || true).
 prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.23.0"
 grafana_version = ENV['GRAFANA_VERSION'] || "7.3.5-1"
 
+# Tests tag to permorm only tests ansible tasks
+tests_tag = ENV['TESTS_ONLY']
+
 Vagrant.configure("2") do |config|
   config.vm.define "hashicorp-labs"
 
@@ -118,6 +121,10 @@ Vagrant.configure("2") do |config|
     ansible_tags.concat(['monitoring'])
   end
   
+  if (tests_tag == "true")
+    ansible_tags = ['tests']
+  end
+  
   config.vm.provision :ansible_local do |ansible|
     ansible.playbook = "ansible/playbook.yml"
     ansible.inventory_path = "ansible/inventory"
@@ -155,12 +162,12 @@ Vagrant.configure("2") do |config|
   config.ssh.password = 'vagrant'
   config.ssh.insert_key = 'true'
 
-  config.vm.post_up_message = "
-Done!
+#   config.vm.post_up_message = "
+# Done!
 
-You can reach services at:
-Vautl -> http://localhost:8200
-Consul -> http://localhost:8500
-Nomad -> http://localhost:4646
-"
+# You can reach services at:
+# Vautl -> http://localhost:8200
+# Consul -> http://localhost:8500
+# Nomad -> http://localhost:4646
+# "
 end
