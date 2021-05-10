@@ -53,6 +53,14 @@ To provision and deploy the workload simply do:
 ./deploy.sh
 ```
 
+or through Makefile:
+
+```bash
+make
+```
+
+with `make help` you'll find some other useful make targets to launch.
+
 At the end, if everything went fine, you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
 While Consul Ingress Gateway is listening at port `8080`, where you can find some preinstalled services.
 
