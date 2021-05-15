@@ -105,13 +105,13 @@ clean:
 
 v-prechecks:
     
-ifneq ("$(VAG_HDIR))", "")
+ifeq ("$(VAG_HDIR))", "")
 	@: $(error $(red)No .vagrant folder found$(reset))
 endif
 
 t-prechecks:
 
-ifneq ("$(TF_HDIR))", "")
+ifeq ("$(TF_HDIR))", "")
 	@: $(error $(red)No .terraform folder found$(reset))
 endif
 
