@@ -103,6 +103,11 @@ clean:
 	@-cd $(TF_DIR) && rm -f terraform.tfstate && rm -f terraform.tfstate.backup && rm -rf .terraform
 	@echo "$(green)Done.$(reset)"
 
+## $ make ssh => ssh into the created VM
+ssh: v-prechecks
+
+	@-cd $(VAGRANT_CWD) && vagrant ssh
+
 v-prechecks:
     
 ifeq ("$(VAG_HDIR))", "")
@@ -115,7 +120,8 @@ ifeq ("$(TF_HDIR))", "")
 	@: $(error $(red)No .terraform folder found$(reset))
 endif
 
-.PHONY: help vagrant terraform test
+
+.PHONY: help vagrant terraform test ssh
 help: Makefile
 	@echo
 	@echo " 	usage: make <command> <args>"
