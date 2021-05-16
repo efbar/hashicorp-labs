@@ -63,9 +63,9 @@ with `make help` you'll find some other useful make targets to launch.
 
 > **Makefile useful tips**
 > 
-> You can run `make tests` to perform some tests to the Vault, Consul and Nomad endpoints.
-> With `make provision` and with the env var `TAGS_ONLY` set as a comma-separated list, you can provision only certain Ansible roles (ex.: `TAGS_ONLY="consul,nomad" make provision`).
-> To deploy only Hashicorp stack (Vault, Consul and Nomad) without Terraforming any services, run `make vagrant`.
+> - You can run `make tests` to perform some tests to the Vault, Consul and Nomad endpoints.
+> - With `make provision` and with the env var `TAGS_ONLY` set as a comma-separated list, you can provision only certain Ansible roles (ex.: `TAGS_ONLY="consul,nomad" make provision`).
+> - To deploy only Hashicorp stack (Vault, Consul and Nomad) without Terraforming any services, run `make vagrant`.
 
 
 At the end, if everything went fine, you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
