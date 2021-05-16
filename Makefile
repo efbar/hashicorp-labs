@@ -62,7 +62,7 @@ ifneq ($(TERRAFORM_LABS),false)
   endif
 endif
 
-## $ make vagrant => simply "vagrant up"
+## $ make vagrant => simply "vagrant up" (avoiding Terraforming too)
 vagrant:
 
 	@-cd $(VAGRANT_CWD) && vagrant up 
