@@ -98,7 +98,7 @@
     name: vault.service
     enabled: yes
 
-- name: Start Vault service
+- name: Ensure Vault service is started
   ansible.builtin.service:
     name: vault.service
-    state: started
+    state: restarted

@@ -105,8 +105,8 @@
     path: /etc/systemd/system/nomad.service
     mode: '0644'
 
-- name: Enable and start Nomad service
+- name: Enable and (re)start Nomad service
   ansible.builtin.service:
     name: nomad
     enabled: yes
-    state: started
+    state: restarted

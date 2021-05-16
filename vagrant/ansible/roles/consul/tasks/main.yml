@@ -141,11 +141,11 @@
     path: /etc/systemd/system/consul.service
     mode: '0644'
 
-- name: Enable and start Consul service
+- name: Enable and (re)start Consul service
   ansible.builtin.service:
     name: consul
     enabled: yes
-    state: started
+    state: restarted
 
 - name: Create Envoy dir
   ansible.builtin.file:
