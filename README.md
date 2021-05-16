@@ -32,7 +32,7 @@ You can choose respective software versions and VM specs with these environment 
 |  `VAGRANT_MEM` | `Memory used by VM` | `8192` |
 |  `VAULT_VERSION` |`Vault version`| `1.7.1` |
 |  `CONSUL_VERSION` |`Consul version`| `1.9.5` |
-|  `NOMAD_VERSION` |`NOMAD version`| `1.0.4` |
+|  `NOMAD_VERSION` |`NOMAD version`| `1.0.5` |
 |  `CNI_VERSION` |`CNI plugin version`| `0.9.0` |
 |  `CONTAINERD_VERSION` |`Containerd version`| `1.4.3-3.1` |
 |  `DOCKER_CE_VERSION` |`Docker CE version`| `20.10.3-3` |
@@ -60,6 +60,11 @@ make
 ```
 
 with `make help` you'll find some other useful make targets to launch.
+
+> **Makefile useful tips**
+> You can run `make tests` to perform some tests to the Vault, Consul and Nomad endpoints.
+> With `make provision` and with the env var `TAGS_ONLY` set as a comma-separated list, you can provision only certain Ansible roles (ex.: `TAGS_ONLY="consul,nomad" make provision`)
+
 
 At the end, if everything went fine, you can reach the services **Vault**, **Consul** and **Nomad** at `localhost`, respectively at `8200`, `8500`, `4646`.
 While Consul Ingress Gateway is listening at port `8080`, where you can find some preinstalled services.
@@ -161,4 +166,4 @@ Done.
 
 ## Clean up
 
-For cleaning up just execute `clean.sh`.
+For cleaning up just execute `clean.sh` or `make clean`
