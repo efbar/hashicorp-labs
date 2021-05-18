@@ -32,7 +32,7 @@ You can choose respective software versions and VM specs with these environment 
 |  `VAGRANT_MEM` | `Memory used by VM` | `8192` |
 |  `VAULT_VERSION` |`Vault version`| `1.7.1` |
 |  `CONSUL_VERSION` |`Consul version`| `1.9.5` |
-|  `NOMAD_VERSION` |`NOMAD version`| `1.0.5` |
+|  `NOMAD_VERSION` |`NOMAD version`| `1.1.0` |
 |  `CNI_VERSION` |`CNI plugin version`| `0.9.0` |
 |  `CONTAINERD_VERSION` |`Containerd version`| `1.4.3-3.1` |
 |  `DOCKER_CE_VERSION` |`Docker CE version`| `20.10.3-3` |
