@@ -18,7 +18,7 @@ box_version = ENV['BOX_VERSION'] || "202103.18.0"
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-vault_version = ENV['VAULT_VERSION'] || "1.7.1"
+vault_version = ENV['VAULT_VERSION'] || "1.7.2"
 vault_group = "vault"
 vault_user = "vault"
 vault_comment = "Vault"
