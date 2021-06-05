@@ -26,22 +26,22 @@ It's been revisited and modified (and it will be upgraded in the future).
 
 You can choose respective software versions and VM specs with these environment variables:
 
-|  ENV | description | default value |
-|---|---|---|
-|  `VAGRANT_CPU_NUM` | `Number of cpu used by VM` | `2` |
-|  `VAGRANT_MEM` | `Memory used by VM` | `8192` |
-|  `VAULT_VERSION` |`Vault version`| `1.7.2` |
-|  `CONSUL_VERSION` |`Consul version`| `1.9.5` |
-|  `NOMAD_VERSION` |`NOMAD version`| `1.1.0` |
-|  `CNI_VERSION` |`CNI plugin version`| `0.9.0` |
-|  `CONTAINERD_VERSION` |`Containerd version`| `1.4.3-3.1` |
-|  `DOCKER_CE_VERSION` |`Docker CE version`| `20.10.3-3` |
-|  `ENVOY_VERSION` |`Envoy version`| `1.16.2` |
-|  `TF_VAR_faasd_version` |`Faasd provider version`| `0.11.2` |
-|  `TF_VAR_faas_nats_version` |`NATS version version`| `0.11.2` |
-|  `TF_VAR_faas_auth_plugin_version` |`Faas Auth plugin version`| `0.20.5` |
-|  `TF_VAR_faas_gateway_version` |`Faas Gateway version`| `0.20.8` |
-|  `TF_VAR_faas_queue_worker_version` |`Faas Queue Worker version`| `0.11.2` |
+| ENV                                | description                 | default value |
+| ---------------------------------- | --------------------------- | ------------- |
+| `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`  | `2`           |
+| `VAGRANT_MEM`                      | `Memory used by VM`         | `8192`        |
+| `VAULT_VERSION`                    | `Vault version`             | `1.7.2`       |
+| `CONSUL_VERSION`                   | `Consul version`            | `1.9.6`       |
+| `NOMAD_VERSION`                    | `NOMAD version`             | `1.1.0`       |
+| `CNI_VERSION`                      | `CNI plugin version`        | `0.9.0`       |
+| `CONTAINERD_VERSION`               | `Containerd version`        | `1.4.3-3.1`   |
+| `DOCKER_CE_VERSION`                | `Docker CE version`         | `20.10.3-3`   |
+| `ENVOY_VERSION`                    | `Envoy version`             | `1.16.2`      |
+| `TF_VAR_faasd_version`             | `Faasd provider version`    | `0.11.2`      |
+| `TF_VAR_faas_nats_version`         | `NATS version version`      | `0.11.2`      |
+| `TF_VAR_faas_auth_plugin_version`  | `Faas Auth plugin version`  | `0.20.5`      |
+| `TF_VAR_faas_gateway_version`      | `Faas Gateway version`      | `0.20.8`      |
+| `TF_VAR_faas_queue_worker_version` | `Faas Queue Worker version` | `0.11.2`      |
 
 ## Provision and deploy
 
