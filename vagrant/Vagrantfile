@@ -117,7 +117,6 @@ Vagrant.configure("2") do |config|
     ansible_tags.concat(['nomad'])
   end
   if (docker_install)
-    config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
     ansible_tags.concat(['docker'])
   end
   if (monitoring_install)
@@ -169,12 +168,4 @@ Vagrant.configure("2") do |config|
   config.ssh.password = 'vagrant'
   config.ssh.insert_key = 'true'
 
-#   config.vm.post_up_message = "
-# Done!
-
-# You can reach services at:
-# Vautl -> http://localhost:8200
-# Consul -> http://localhost:8500
-# Nomad -> http://localhost:4646
-# "
 end
