@@ -43,7 +43,7 @@
     group: "{{ nomad_group }}"
     mode: '0755'
 
-- name: Create Nomad config, data and tls dir
+- name: Create Nomad config and data dir
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -51,7 +51,7 @@
     owner: "{{ nomad_user }}"
     group: "{{ nomad_group }}"
     recurse: yes
-  with_items: ["{{ nomad_config_dir }}","{{ nomad_tls_dir }}","{{ nomad_data_dir }}"]
+  with_items: ["{{ nomad_config_dir }}","{{ nomad_data_dir }}"]
 
 - name: Set Nomad config dir permissions 
   ansible.builtin.file:
