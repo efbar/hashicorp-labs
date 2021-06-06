@@ -24,24 +24,24 @@ job "ingress-gateway" {
               port     = 8080
               protocol = "http"
               service {
-                name = "minimal-service"
-                hosts = ["minimal-service","minimal-service:8080" ]
+                name  = "minimal-service"
+                hosts = ["minimal-service", "minimal-service:8080"]
               }
               service {
-                name = "minimal-service-2"
-                hosts = ["minimal-service-2","minimal-service-2:8080" ]
+                name  = "minimal-service-2"
+                hosts = ["minimal-service-2", "minimal-service-2:8080"]
               }
               service {
-                name = "faasd-gateway"
-                hosts = ["faasd-gateway","faasd-gateway:8080" ]
+                name  = "faasd-gateway"
+                hosts = ["faasd-gateway", "faasd-gateway:8080"]
               }
               service {
-                name = "prometheus"
-                hosts = ["prometheus","prometheus:8080" ]
+                name  = "prometheus"
+                hosts = ["prometheus", "prometheus:8080"]
               }
               service {
-                name = "grafana"
-                hosts = ["grafana","grafana:8080" ]
+                name  = "grafana"
+                hosts = ["grafana", "grafana:8080"]
               }
             }
           }

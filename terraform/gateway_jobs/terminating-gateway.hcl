@@ -6,10 +6,7 @@ job "terminating-gateway" {
 
     network {
       mode = "host"
-      port "inbound" {
-        static = 8088
-        to     = 8080
-      }
+      port "inbound" {}
     }
 
     service {
