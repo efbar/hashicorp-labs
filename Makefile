@@ -55,17 +55,17 @@ endif
 validation:
 
 	$(info $(green)Performing Vagrant and Terraform code validation..$(reset))
-	@-cd $(VAGRANT_CWD) && vagrant validate
+	@cd $(VAGRANT_CWD) && vagrant validate
 ifneq ($(TERRAFORM_LABS),false)
   ifeq ("$(TF_HDIR))", "")
-	@-cd $(TF_DIR) && echo "Now Terraform code validation.." && terraform validate
+	@cd $(TF_DIR) && echo "Now Terraform code validation.." && terraform validate
   endif
 endif
 
 ## $ make vagrant => simply "vagrant up" (avoiding Terraforming too)
 vagrant:
 
-	@-cd $(VAGRANT_CWD) && vagrant up 
+	@cd $(VAGRANT_CWD) && vagrant up 
 ifneq ($(TERRAFORM_LABS),false)
 	@echo "$(green)$$NOTF_BODY$(reset)"
 endif
@@ -73,26 +73,25 @@ endif
 ## $ make provision => simply "vagrant provision"
 provision: v-prechecks
 
-	@-cd $(VAGRANT_CWD) && vagrant provision 
+	@cd $(VAGRANT_CWD) && vagrant provision 
 ifneq ($(TERRAFORM_LABS),false)
 	@echo "$(green)$$NOTF_BODY$(reset)"
 endif
 
 ## $ make terraform => simply "terraform apply"
 terraform:
-
-	@-cd $(TF_DIR) && terraform init && terraform plan && terraform apply -auto-approve
+	@cd $(TF_DIR) && terraform init && terraform plan && terraform apply -auto-approve
 	@echo "$(green)$$BODY$(reset)"
 
 ## $ make tests => if VM has been provisioned correctly, runs some test to Hashicorp endpoints
 tests: v-prechecks
 	
-	@-cd $(VAGRANT_CWD) && TESTS_ONLY=true vagrant provision
+	@cd $(VAGRANT_CWD) && TESTS_ONLY=true vagrant provision
 
 ## $ make dockerlogin => if DOCKER_USER and DOCKER_PASS environment variables are set, it let OpenFAAS login to docker hub registry
 dockerlogin: v-prechecks
 
-	@-cd $(VAGRANT_CWD) && vagrant ssh -c "echo $(DOCKER_PASS) | docker login -u $(DOCKER_USER) --password-stdin && mkdir -p /var/lib/faasd/.docker && cp .docker/config.json /var/lib/faasd/.docker/config.json"
+	@cd $(VAGRANT_CWD) && vagrant ssh -c "echo $(DOCKER_PASS) | docker login -u $(DOCKER_USER) --password-stdin && mkdir -p /var/lib/faasd/.docker && cp .docker/config.json /var/lib/faasd/.docker/config.json"
 
 ## $ make clean => destroys and cleans up everything (vagrant and terraform files and directories)
 clean:
@@ -106,7 +105,7 @@ clean:
 ## $ make ssh => ssh into the created VM
 ssh: v-prechecks
 
-	@-cd $(VAGRANT_CWD) && vagrant ssh
+	@cd $(VAGRANT_CWD) && vagrant ssh
 
 v-prechecks:
     
