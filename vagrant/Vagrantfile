@@ -38,7 +38,7 @@ cni_version = ENV['CNI_VERSION'] || "0.9.0"
 # Nomad variables
 nomad_install = ["true", "1"].include?((ENV['NOMAD_INSTALL'] || true).to_s.downcase)
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
-nomad_version = ENV['NOMAD_VERSION'] || "1.1.1"
+nomad_version = ENV['NOMAD_VERSION'] || "1.1.2"
 nomad_group = "nomad"
 nomad_user = "nomad"
 nomad_home = "/srv/nomad"
