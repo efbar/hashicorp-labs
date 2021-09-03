@@ -18,7 +18,7 @@ box_version = ENV['BOX_VERSION'] || "202103.18.0"
 # Vault variables
 vault_install = ["true", "1"].include?((ENV['VAULT_INSTALL'] || true).to_s.downcase)
 vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-vault_version = ENV['VAULT_VERSION'] || "1.7.2"
+vault_version = ENV['VAULT_VERSION'] || "1.8.2"
 vault_group = "vault"
 vault_user = "vault"
 vault_comment = "Vault"
@@ -27,32 +27,33 @@ vault_home = "/srv/vault"
 # Consul variables
 consul_install = ["true", "1"].include?((ENV['CONSUL_INSTALL'] || true).to_s.downcase)
 consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-consul_version = ENV['CONSUL_VERSION'] || "1.9.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.10.2"
 consul_group = "consul"
 consul_user = "consul"
 consul_comment = "Consul"
 consul_home = "/srv/consul"
 cni_install = ["true", "1"].include?((ENV['CNI_INSTALL'] || true).to_s.downcase)
-cni_version = ENV['CNI_VERSION'] || "0.9.0"
+cni_version = ENV['CNI_VERSION'] || "0.9.1"
 
 # Nomad variables
 nomad_install = ["true", "1"].include?((ENV['NOMAD_INSTALL'] || true).to_s.downcase)
 nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
-nomad_version = ENV['NOMAD_VERSION'] || "1.1.2"
+nomad_version = ENV['NOMAD_VERSION'] || "1.1.4"
 nomad_group = "nomad"
 nomad_user = "nomad"
 nomad_home = "/srv/nomad"
 
 # Docker variables
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
-containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.3-3.1"
-docker_ce_version = ENV['DOCKER_CE_VERSION'] || "20.10.3-3"
-envoy_version = ENV['ENVOY_VERSION'] || "1.16.2.p0.ge98e41a-1p71.gbe6132a"
+containerd_version = ENV['CONTAINERD_VERSION'] || "1.4.9-3.1"
+docker_ce_version = ENV['DOCKER_CE_VERSION'] || "20.10.8-3"
+docker_scan_version = ENV['DOCKER_SCAN_VERSION'] || "0.8.0-3"
+envoy_version = ENV['ENVOY_VERSION'] || "1.18.2.p0.gd362e79-1p75.g76c310e"
 
 # Monitoring variables
 monitoring_install = ["true", "1"].include?((ENV['MONITORING_INSTALL'] || true).to_s.downcase)
-prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.23.0"
-grafana_version = ENV['GRAFANA_VERSION'] || "7.3.5-1"
+prometheus_version = ENV['PROMETHEUS_VERSION'] || "2.28.1"
+grafana_version = ENV['GRAFANA_VERSION'] || "8.1.0-1"
 
 # Tests tag to permorm only tests ansible tasks
 tests_tag = ENV['TESTS_ONLY']
@@ -155,6 +156,7 @@ Vagrant.configure("2") do |config|
       nomad_version: nomad_version,
       containerd_version: containerd_version,
       docker_ce_version: docker_ce_version,
+      docker_scan_version: docker_scan_version,
       prometheus_version: prometheus_version,
       grafana_version: grafana_version,
     }
