@@ -112,7 +112,7 @@ job "faasd_bundle" {
     }
 
     task "faasd_provider" {
-      driver = "exec"
+      driver = "raw_exec"
       config {
         command = "/usr/local/bin/faasd"
         args    = ["provider"]
@@ -216,7 +216,7 @@ job "faasd_bundle" {
     task "queue-worker" {
       driver = "docker"
       config {
-        image = "docker.io/openfaas/queue-worker:${faas_queue_worker_version}"
+        image = "ghcr.io/openfaas/queue-worker:${faas_queue_worker_version}"
       }
       template {
         data        = "password"
