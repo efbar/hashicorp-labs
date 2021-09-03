@@ -106,7 +106,7 @@
   ansible.builtin.file:
     path: /var/lib/grafana/plugins
     state: directory
-    mode: '0644'
+    mode: '0755'
 
 - name: Download and extract Grafana plugins
   ansible.builtin.unarchive:
@@ -121,8 +121,10 @@
 - name: Create Grafana dir
   ansible.builtin.file:
     path: /var/lib/grafana/dashboards
+    owner: grafana
+    group: grafana
     state: directory
-    mode: '0644'
+    mode: '0755'
 
 - name: Add Grafana datasources
   copy:
@@ -132,8 +134,17 @@
     group: grafana
     mode: '0644'
   loop:
-    - files/dashboard-provision.yaml
     - files/prometheus-ds.yaml
+
+- name: Add Grafana dashboards
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/grafana/provisioning/dashboards/"
+    owner: grafana
+    group: grafana
+    mode: '0644'
+  loop:
+    - files/dashboard-provision.yaml
 
 - name: Add Grafana dashboards
   copy:
@@ -146,8 +157,13 @@
     - files/faasd.json
     - files/nomad-jobs.json
 
+- name: Remove sample file
+  ansible.builtin.file:
+    path: /etc/grafana/provisioning/dashboards/sample.yaml
+    state: absent
+
 - name: Enable and start Grafana service
   ansible.builtin.service:
     name: grafana-server
     enabled: yes
-    state: started
+    state: restarted
