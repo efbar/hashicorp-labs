@@ -12,21 +12,21 @@ variable "deploy_example_jobs" {
 }
 variable "faasd_version" {
   type    = string
-  default = "0.11.2"
+  default = "0.13.0"
 }
 variable "faas_nats_version" {
   type    = string
-  default = "0.11.2"
+  default = "0.22.0"
 }
 variable "faas_auth_plugin_version" {
   type    = string
-  default = "0.20.5"
+  default = "0.21.0"
 }
 variable "faas_gateway_version" {
   type    = string
-  default = "0.20.8"
+  default = "0.21.0"
 }
 variable "faas_queue_worker_version" {
   type    = string
-  default = "0.11.2"
+  default = "0.12.2"
 }
