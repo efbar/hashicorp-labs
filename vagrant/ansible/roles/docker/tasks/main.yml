@@ -9,6 +9,7 @@
     - "{{ docker_ce_rootless_extras_url }}"
     - "{{ docker_ce_url }}"
     - "{{ docker_ce_cli_url }}"
+    - "{{ docker_scan_url }}"
   register: downloaded_files
   tags: [ docker ]
 

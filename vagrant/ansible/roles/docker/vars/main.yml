@@ -4,4 +4,5 @@ containerd_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packag
 docker_ce_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-{{ docker_ce_version }}.el7.x86_64.rpm"
 docker_ce_cli_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-{{ docker_ce_version }}.el7.x86_64.rpm"
 docker_ce_rootless_extras_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-rootless-extras-{{ docker_ce_version }}.el7.x86_64.rpm"
+docker_scan_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-scan-plugin-{{ docker_scan_version }}.el7.x86_64.rpm"
 docker_opts: "DOCKER_OPTS='--dns 127.0.0.1 --dns 8.8.8.8 --dns-search service.consul'"
