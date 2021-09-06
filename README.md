@@ -45,7 +45,7 @@ You can choose respective software versions and VM specs with these environment 
 
 ## Provision and deploy
 
-> You need Hashicorp **Terraform** (version >= 0.14.1) and **Vagrant** installed (version >= 2.2.1).
+> You need Hashicorp **Terraform** (version >= 0.13.1, < 1.0.0 ) and **Vagrant** installed (version >= 2.2.1).
 
 To provision and deploy the workload simply do:
 
