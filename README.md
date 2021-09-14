@@ -30,18 +30,19 @@ You can choose respective software versions and VM specs with these environment 
 | ---------------------------------- | --------------------------- | ------------- |
 | `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`  | `2`           |
 | `VAGRANT_MEM`                      | `Memory used by VM`         | `8192`        |
-| `VAULT_VERSION`                    | `Vault version`             | `1.7.2`       |
-| `CONSUL_VERSION`                   | `Consul version`            | `1.9.6`       |
-| `NOMAD_VERSION`                    | `NOMAD version`             | `1.1.2`       |
-| `CNI_VERSION`                      | `CNI plugin version`        | `0.9.0`       |
-| `CONTAINERD_VERSION`               | `Containerd version`        | `1.4.3-3.1`   |
-| `DOCKER_CE_VERSION`                | `Docker CE version`         | `20.10.3-3`   |
-| `ENVOY_VERSION`                    | `Envoy version`             | `1.16.2`      |
-| `TF_VAR_faasd_version`             | `Faasd provider version`    | `0.11.2`      |
-| `TF_VAR_faas_nats_version`         | `NATS version version`      | `0.11.2`      |
-| `TF_VAR_faas_auth_plugin_version`  | `Faas Auth plugin version`  | `0.20.5`      |
-| `TF_VAR_faas_gateway_version`      | `Faas Gateway version`      | `0.20.8`      |
-| `TF_VAR_faas_queue_worker_version` | `Faas Queue Worker version` | `0.11.2`      |
+| `VAULT_VERSION`                    | `Vault version`             | `1.8.2`       |
+| `CONSUL_VERSION`                   | `Consul version`            | `1.10.2`      |
+| `NOMAD_VERSION`                    | `NOMAD version`             | `1.1.4`       |
+| `CNI_VERSION`                      | `CNI plugin version`        | `0.9.1`       |
+| `CONTAINERD_VERSION`               | `Containerd version`        | `1.4.9-3.1`   |
+| `DOCKER_CE_VERSION`                | `Docker CE version`         | `20.10.8-3`   |
+| `DOCKER_SCAN_VERSION`              | `Docker Scan version`       | `0.8.0-3`     |
+| `ENVOY_VERSION`                    | `Envoy version`             | `1.18.2`      |
+| `TF_VAR_faasd_version`             | `Faasd provider version`    | `0.13.0`      |
+| `TF_VAR_faas_nats_version`         | `NATS version version`      | `0.22.0`      |
+| `TF_VAR_faas_auth_plugin_version`  | `Faas Auth plugin version`  | `0.21.0`      |
+| `TF_VAR_faas_gateway_version`      | `Faas Gateway version`      | `0.21.0`      |
+| `TF_VAR_faas_queue_worker_version` | `Faas Queue Worker version` | `0.12.2`      |
 
 ## Provision and deploy
 
