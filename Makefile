@@ -65,7 +65,11 @@ endif
 ## $ make vagrant => simply "vagrant up" (avoiding Terraforming too)
 vagrant:
 
-	@cd $(VAGRANT_CWD) && vagrant up 
+ifeq ($(VAGRANT_VMWARE), true)
+	@cd $(VAGRANT_CWD) && vagrant up --provider vmware_fusion
+else
+	@cd $(VAGRANT_CWD) && vagrant up
+endif
 ifneq ($(TERRAFORM_LABS),false)
 	@echo "$(green)$$NOTF_BODY$(reset)"
 endif

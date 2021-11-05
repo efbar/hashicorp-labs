@@ -19,7 +19,7 @@
   ansible.builtin.file:
     path: "{{ consul_home }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     recurse: yes
 
 - name: Change ownership of Consul user directory
@@ -41,24 +41,25 @@
     path: "{{ consul_path }}"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
-    mode: '0755'
+    mode: "0755"
 
 - name: Create Consul config, data and tls dir
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
     recurse: yes
-  with_items: ["{{ consul_config_dir }}","{{ consul_tls_dir }}","{{ consul_data_dir }}"]
+  with_items:
+    ["{{ consul_config_dir }}", "{{ consul_tls_dir }}", "{{ consul_data_dir }}"]
 
-- name: Set Consul config dir permissions 
+- name: Set Consul config dir permissions
   ansible.builtin.file:
     path: "{{ consul_config_dir }}/*"
     state: directory
     recurse: yes
-    mode: '0644'
+    mode: "0644"
 
 - name: Set Consul profile script
   copy:
@@ -80,11 +81,11 @@
 
 - name: Add prometheus and grafana service
   copy:
-    src: '{{ item }}'
+    src: "{{ item }}"
     dest: "{{ consul_config_dir }}"
     owner: "{{ consul_user }}"
     group: "{{ consul_group }}"
-    mode: '0755'
+    mode: "0755"
   loop:
     - files/prometheus-service.json
     - files/grafana-service.json
@@ -99,7 +100,7 @@
   ansible.builtin.lineinfile:
     path: /etc/resolv.conf
     insertbefore: BOF
-    line: 'nameserver 127.0.0.1'
+    line: "nameserver 127.0.0.1"
   become: yes
 
 - name: Configuring dnsmasq to forward .consul requests to consul port 8600
@@ -112,7 +113,6 @@
     name: dnsmasq.service
     enabled: yes
     state: started
-
 
 - name: Set consul systemd service
   blockinfile:
@@ -139,7 +139,7 @@
 - name: Change mode of Consul service file
   ansible.builtin.file:
     path: /etc/systemd/system/consul.service
-    mode: '0644'
+    mode: "0644"
 
 - name: Enable and (re)start Consul service
   ansible.builtin.service:
@@ -151,15 +151,15 @@
   ansible.builtin.file:
     path: /opt/getenvoy/bin
     state: directory
-    mode: '0644'
-  tags: [ envoy ]
+    mode: "0644"
+  tags: [envoy]
 
 - name: Download and extract Envoy binary
   get_url:
     url: "{{envoy_url}}"
     dest: /tmp
   ignore_errors: yes
-  tags: [ envoy ]
+  tags: [envoy]
 
 - name: Check if downloaded
   stat:
@@ -189,8 +189,8 @@
   ansible.builtin.file:
     path: /opt/cni/bin
     state: directory
-    mode: '0644'
-  tags: [ cni ]
+    mode: "0644"
+  tags: [cni]
 
 - name: Download and extract CNI binary
   ansible.builtin.unarchive:
@@ -198,12 +198,19 @@
     dest: /opt/cni/bin
     remote_src: yes
   ignore_errors: yes
-  tags: [ cni ]
+  tags: [cni]
 
 - name: Set net bridge for iptables
   copy:
     content: "net.bridge.bridge-nf-call-arptables = 1\nnet.bridge.bridge-nf-call-ip6tables = 1\nnet.bridge.bridge-nf-call-iptables = 1"
     dest: "/etc/sysctl.d/bridge.conf"
   become: yes
-  tags: [ cni ]
+  tags: [cni]
 
+- name: Set ipv4 forwarding
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    line: net.ipv4.conf.all.forwarding=1
+    create: yes
+  become: yes
+  tags: [cni]

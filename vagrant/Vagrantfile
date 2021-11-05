@@ -67,32 +67,26 @@ Vagrant.configure("2") do |config|
   # Use vagrant insecure public key, comment this out to restrict access
   config.ssh.insert_key = false
 
-   # Increase memory for Parallels Desktop
-   config.vm.provider "parallels" do |p, o|
-    p.memory = vagrant_mem
-    p.cpus = vagrant_cpu_num
-  end
-
+  # Setup networking
+  config.vm.network :private_network, ip: private_ip
+  config.vm.network "private_network", type: "dhcp"
+  
   # Increase memory for Virtualbox
   config.vm.provider "virtualbox" do |vb|
     vb.name = "hashicorp-labs-#{vagrantfile_tag}"
     vb.memory = vagrant_mem
     vb.cpus = vagrant_cpu_num
   end
-
+  
   # Increase memory for VMware
   ["vmware_fusion", "vmware_workstation"].each do |p|
     config.vm.provider p do |v|
-      v.name = "hashicorp-labs-#{vagrantfile_tag}"
       v.vmx["memsize"] = vagrant_mem
       v.vmx["numvcpus"] = vagrant_cpu_num
+      v.vmx["tools.upgrade.policy"] = "manual"
     end
   end
-
-  # Setup networking
-  config.vm.network :private_network, ip: private_ip
-  config.vm.network "private_network", type: "dhcp"
-
+  
   # Set box version
   config.vm.box = base_box
   config.vm.box_version = box_version
