@@ -12,16 +12,17 @@ job "faasd_bundle" {
     }
 
     network {
-      port "faasd_http" {
+      port "faasd_provider_tcp" {
         static = 8081
         to     = 8081
       }
       port "auth_http" {}
-      port "nats_tcp" {}
-      port "nats_tcp_1" {
-        to = 6222
+      port "nats_tcp_client" {
+        to = 4222
       }
-      port "nats_mon" {}
+      port "nats_http_mon" {
+        to = 8222
+      }
       port "gateway_http" {
         to = 8080
       }
@@ -29,7 +30,7 @@ job "faasd_bundle" {
         to = 8082
       }
       dns {
-        servers = ["10.0.2.15"]
+        servers = ["192.168.50.153"]
       }
     }
 
@@ -49,12 +50,26 @@ job "faasd_bundle" {
     service {
       name = "faasd-nats"
       tags = ["serverless"]
-      port = "nats_tcp"
+      port = "nats_tcp_client"
 
       check {
         type     = "tcp"
-        port     = "nats_tcp"
+        port     = "nats_tcp_client"
         interval = "5s"
+        timeout  = "2s"
+      }
+    }
+
+    service {
+      name = "faasd-nats-monitoring"
+      tags = ["serverless"]
+      port = "nats_http_mon"
+
+      check {
+        type     = "http"
+        path     = "/connz"
+        port     = "nats_http_mon"
+        interval = "30s"
         timeout  = "2s"
       }
     }
@@ -65,34 +80,22 @@ job "faasd_bundle" {
       port = "gateway_http"
 
       check {
-        type     = "tcp"
+        type     = "http"
+        path     = "/healthz"
         port     = "gateway_http"
         interval = "5s"
         timeout  = "2s"
       }
     }
 
-    service {
-      name = "faasd-mon"
-      tags = ["serverless"]
-      port = "gateway_mon"
-
-      check {
-        type     = "http"
-        path     = "/metrics"
-        port     = "gateway_mon"
-        interval = "30s"
-        timeout  = "2s"
-      }
-    }
 
     service {
       name = "faasd-provider"
       tags = ["serverless"]
-      port = "faasd_http"
+      port = "faasd_provider_tcp"
       check {
         type     = "tcp"
-        port     = "faasd_http"
+        port     = "faasd_provider_tcp"
         interval = "5s"
         timeout  = "2s"
       }
@@ -107,7 +110,7 @@ job "faasd_bundle" {
       driver = "raw_exec"
       config {
         command = "sh"
-        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd && mv faasd /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
+        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd && mkdir -p /var/lib/faasd && touch /var/lib/faasd/hosts /var/lib/faasd/resolv.conf && mv faasd /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
       }
     }
 
@@ -118,8 +121,11 @@ job "faasd_bundle" {
         args    = ["provider"]
       }
       resources {
-        cpu    = 50
-        memory = 100
+        cpu    = 100
+        memory = 500
+      }
+      env {
+        service_timeout = "${timeout}"
       }
     }
 
@@ -127,17 +133,21 @@ job "faasd_bundle" {
       driver = "docker"
       config {
         image      = "docker.io/library/nats-streaming:${faas_nats_version}"
-        ports      = ["nats_tcp", "nats_tcp_1"]
+        ports      = ["nats_tcp_client", "nats_http_mon"]
         entrypoint = ["/nats-streaming-server"]
         args = [
           "-p",
-          "$${NOMAD_PORT_nats_tcp}",
+          "$${NOMAD_PORT_nats_tcp_client}",
           "-m",
-          "$${NOMAD_PORT_nats_mon}",
+          "$${NOMAD_PORT_nats_http_mon}",
           "--store=memory",
           "--cluster_id=faas-cluster",
           "-DV"
         ]
+      }
+      env {
+        read_timeout  = "${timeout}"
+        write_timeout = "${timeout}"
       }
       resources {
         cpu    = 50
@@ -193,15 +203,15 @@ job "faasd_bundle" {
       }
       env {
         basic_auth             = "true"
-        functions_provider_url = "http://faasd-provider.service.consul:$${NOMAD_PORT_faasd_http}/"
+        functions_provider_url = "http://faasd-provider.service.consul:$${NOMAD_HOST_PORT_faasd_provider_tcp}/"
         direct_functions       = "false"
-        read_timeout           = "60s"
-        write_timeout          = "60s"
-        upstream_timeout       = "65s"
-        faas_prometheus_host   = "$${NOMAD_HOST_IP_gateway_http}"
+        read_timeout           = "${timeout}"
+        write_timeout          = "${timeout}"
+        upstream_timeout       = "${timeout}"
+        faas_prometheus_host   = "$${NOMAD_HOST_IP_gateway_mon}"
         faas_nats_address      = "faasd-nats.service.consul"
-        faas_nats_port         = "$${NOMAD_PORT_nats_tcp}"
-        auth_proxy_url         = "http://faasd-basic-auth.service.consul:$${NOMAD_PORT_auth_http}/validate"
+        faas_nats_port         = "$${NOMAD_HOST_PORT_nats_tcp_client}"
+        auth_proxy_url         = "http://faasd-basic-auth.service.consul:$${NOMAD_HOST_PORT_auth_http}/validate"
         auth_proxy_pass_body   = "false"
         secret_mount_path      = "/secrets"
         scale_from_zero        = "true"
@@ -229,10 +239,10 @@ job "faasd_bundle" {
       }
       env {
         faas_nats_address    = "faasd-nats.service.consul"
-        faas_nats_port       = "$${NOMAD_PORT_nats_tcp}"
+        faas_nats_port       = "$${NOMAD_HOST_PORT_nats_tcp_client}"
         gateway_invoke       = "true"
-        faas_gateway_address = "faads-gateway.service.consul:$${NOMAD_PORT_gateway_http}"
-        ack_wait             = "5m5s"
+        faas_gateway_address = "faads-gateway.service.consul:$${NOMAD_HOST_PORT_gateway_http}"
+        ack_wait             = "${timeout}"
         max_inflight         = "1"
         write_debug          = "true"
         basic_auth           = "true"

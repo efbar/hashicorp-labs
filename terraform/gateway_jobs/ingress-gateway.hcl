@@ -5,7 +5,7 @@ job "ingress-gateway" {
   group "ingress-group" {
 
     network {
-      mode = "bridge"
+      mode = "host"
       port "inbound" {
         static = 8080
         to     = 8080

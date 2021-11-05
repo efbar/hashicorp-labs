@@ -10,6 +10,7 @@ resource "nomad_job" "jobs" {
     each.value,
     {
       dc_name                   = "dc1",
+      timeout                   = "60s",
       faasd_version             = var.faasd_version,
       faas_nats_version         = var.faas_nats_version,
       faas_auth_plugin_version  = var.faas_auth_plugin_version,

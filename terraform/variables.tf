@@ -12,7 +12,7 @@ variable "deploy_example_jobs" {
 }
 variable "faasd_version" {
   type    = string
-  default = "0.13.0"
+  default = "0.14.3"
 }
 variable "faas_nats_version" {
   type    = string
