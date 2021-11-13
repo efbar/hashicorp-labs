@@ -31,8 +31,8 @@ You can choose respective software versions and VM specs with these environment 
 | `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`     | `2`           |
 | `VAGRANT_MEM`                      | `Memory used by VM`            | `8192`        |
 | `VAGRANT_VMWARE`                   | `If set, uses VMware provider` | `false`       |
-| `VAULT_VERSION`                    | `Vault version`                | `1.8.3`       |
-| `CONSUL_VERSION`                   | `Consul version`               | `1.10.3`      |
+| `VAULT_VERSION`                    | `Vault version`                | `1.8.4`       |
+| `CONSUL_VERSION`                   | `Consul version`               | `1.10.4`      |
 | `NOMAD_VERSION`                    | `NOMAD version`                | `1.1.6`       |
 | `CNI_VERSION`                      | `CNI plugin version`           | `0.9.1`       |
 | `CONTAINERD_VERSION`               | `Containerd version`           | `1.4.9-3.1`   |
