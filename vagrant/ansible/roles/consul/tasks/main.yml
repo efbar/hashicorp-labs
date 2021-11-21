@@ -91,7 +91,7 @@
     - files/grafana-service.json
 
 - name: Install dnsmasq
-  yum:
+  ansible.builtin.package:
     name: "dnsmasq"
     state: present
     update_cache: yes
@@ -154,22 +154,41 @@
     mode: "0644"
   tags: [envoy]
 
-- name: Download and extract Envoy binary
+- name: Download and install Envoy deb package
   get_url:
-    url: "{{envoy_url}}"
+    url: "{{envoy_url_deb}}"
     dest: /tmp
-  ignore_errors: yes
   tags: [envoy]
+  when: ansible_facts['os_family'] == "Debian" and ansible_facts['architecture'] == "amd64"
 
-- name: Check if downloaded
+- name: Check if Envoy deb package has been downloaded
+  stat:
+    path: /tmp/getenvoy-envoy_{{envoy_version}}_amd64.deb
+  register: envoy_pkg
+  when: ansible_facts['os_family'] == "Debian" and ansible_facts['architecture'] == "amd64"
+
+- name: Download and install Envoy rpm package
+  get_url:
+    url: "{{envoy_url_rpm}}"
+    dest: /tmp
+  tags: [envoy]
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Check if Envoy rpm package has been downloaded
   stat:
     path: /tmp/getenvoy-envoy-{{envoy_version}}.x86_64.rpm
-  register: envoy_rpm
+  register: envoy_pkg
+  when: ansible_facts['os_family'] == "RedHat"
 
-- name: Install Envoy
+- name: Install Envoy on Centos/Redhat
   yum:
-    name: /tmp/getenvoy-envoy-{{envoy_version}}.x86_64.rpm
-  when: envoy_rpm.stat.exists
+    name: /tmp/getenvoy-envoy-{{envoy_version}}.{{ ansible_facts['architecture'] }}.rpm
+  when: ansible_facts['os_family'] == "RedHat" and envoy_pkg.stat.exists
+
+- name: Install Envoy on Debian/Ubuntu
+  apt:
+    apt: /tmp/getenvoy-envoy-{{envoy_version}}.{{ ansible_facts['architecture'] }}.deb
+  when: ansible_facts['os_family'] == "Debian" and ansible_facts['architecture'] == "amd64" and envoy_pkg.stat.exists
 
 - name: Check for files existance
   stat:

@@ -110,7 +110,7 @@ job "faasd_bundle" {
       driver = "raw_exec"
       config {
         command = "sh"
-        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd && mkdir -p /var/lib/faasd && touch /var/lib/faasd/hosts /var/lib/faasd/resolv.conf && mv faasd /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
+        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd${faasd_arm} && mkdir -p /var/lib/faasd && touch /var/lib/faasd/hosts /var/lib/faasd/resolv.conf && mv faasd${faasd_arm} /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
       }
     }
 

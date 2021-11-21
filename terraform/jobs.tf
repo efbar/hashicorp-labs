@@ -12,6 +12,7 @@ resource "nomad_job" "jobs" {
       dc_name                   = "dc1",
       timeout                   = "60s",
       faasd_version             = var.faasd_version,
+      faasd_arm                 = var.faasd_arm ? "-arm64" : "",
       faas_nats_version         = var.faas_nats_version,
       faas_auth_plugin_version  = var.faas_auth_plugin_version,
       faas_gateway_version      = var.faas_gateway_version,
