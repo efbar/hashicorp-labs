@@ -13,3 +13,11 @@
       uri:
         url: "http://localhost:4646/v1/status/leader"
         status_code: 200
+
+- name: Restart DNSmasq service
+  ansible.builtin.service:
+    name: dnsmasq.service
+    enabled: yes
+    state: restarted
+  when: ansible_facts['os_family'] == "Debian"
+
