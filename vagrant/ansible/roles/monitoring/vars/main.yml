@@ -1,4 +1,4 @@
 ---
 # vars file for monitoring
 prometheus_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.tar.gz"
-grafana_url: "https://dl.grafana.com/oss/release/grafana_{{ grafana_version }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+grafana_url: "https://dl.grafana.com/oss/release/grafana{{ '-' if ansible_facts['os_family'] == 'RedHat' else '_' }}{{ grafana_version }}{{ '.' if ansible_facts['os_family'] == 'RedHat' else '_' }}{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'x86_64' if ansible_facts['os_family'] == 'RedHat' else 'amd64' }}"

@@ -90,11 +90,37 @@
     - files/prometheus-service.json
     - files/grafana-service.json
 
+# - name: Start systemd-resolved service
+#   ansible.builtin.service:
+#     name: systemd-resolved.service
+#     state: started
+#   when: ansible_facts['os_family'] == "Debian"
+
 - name: Install dnsmasq
   ansible.builtin.package:
     name: "dnsmasq"
     state: present
     update_cache: yes
+
+- name: Avoid systemd-resolved service conflict
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    insertafter: EOF
+    line: "DNSStubListener=no"
+  become: yes
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Restart systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    state: restarted
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Stop systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    state: stopped
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Update resolv.conf
   ansible.builtin.lineinfile:

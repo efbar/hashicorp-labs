@@ -1,16 +1,19 @@
 ---
 # vars file for docker
 redhat_urls:
-  containerd_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-{{ containerd_version }}.el7.x86_64.rpm"
-  docker_ce_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-{{ docker_ce_version }}.el7.x86_64.rpm"
-  docker_ce_cli_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-{{ docker_ce_version }}.el7.x86_64.rpm"
-  docker_ce_rootless_extras_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-rootless-extras-{{ docker_ce_version }}.el7.x86_64.rpm"
-  docker_scan_url: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-scan-plugin-{{ docker_scan_version }}.el7.x86_64.rpm"
-debian_urls: [
-  "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/containerd.io_1.4.11-1_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
-  "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce_20.10.10~3-0~ubuntu-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
-  "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce-cli_20.10.10~3-0~ubuntu-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
-  "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce-rootless-extras_20.10.10~3-0~ubuntu-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb"
-]
+  [
+    "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-{{ containerd_version }}.el7.x86_64.rpm",
+    "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-{{ docker_ce_version }}.el7.x86_64.rpm",
+    "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-cli-{{ docker_ce_version }}.el7.x86_64.rpm",
+    "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-rootless-extras-{{ docker_ce_version }}.el7.x86_64.rpm",
+    "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-scan-plugin-{{ docker_scan_version }}.el7.x86_64.rpm",
+  ]
+debian_urls:
+  [
+    "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/containerd.io_{{ containerd_version }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
+    "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce_{{ docker_ce_version }}-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
+    "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce-cli_{{ docker_ce_version }}-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
+    "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/pool/stable/{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/docker-ce-rootless-extras_{{ docker_ce_version }}-{{ ansible_distribution_release }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb",
+  ]
 
 docker_opts: "DOCKER_OPTS='--dns 127.0.0.1 --dns 8.8.8.8 --dns-search service.consul'"

@@ -2,37 +2,55 @@
 # tasks file for docker
 - name: Download Containerd and Docker pkgs
   vars:
-  - target_os: "{{ ansible_facts['os_family']|lower }}"
+    - target_os: "{{ ansible_facts['os_family']|lower }}"
   get_url:
     url: "{{ item }}"
     dest: /tmp
   loop: "{{ lookup('vars', target_os + '_urls') }}"
   retries: 3
   register: downloaded_files
-  tags: [ docker ]
+  tags: [docker]
+
+- name: Get Containerd package
+  find:
+    paths:
+      - /tmp
+    patterns: "containerd"
+    use_regex: true
+  register: containerd_pkg
+
+- name: Install Containerd deb package
+  ansible.builtin.apt:
+    deb: "{{ containerd_pkg.files[0].path }}"
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Get package files list
   find:
-    paths: 
+    paths:
       - /tmp
     patterns: ".*(deb|rpm)"
     use_regex: true
-  register: pkg_files
+  register: pkg_list
 
-- name: Get deps
-  set_fact:
-    pkg_list: "{{ pkg_files.files | map(attribute='path') | list}}"
+# - name: Print
+#   debug:
+#     msg: "{{ pkg_list }}"
 
-- name: Install Containerd and Docker in Ubuntu/Debian
+- name: Install Docker in Ubuntu/Debian
   ansible.builtin.apt:
-    deb: "{{item}}"
-  with_items: "{{ pkg_list }}"
+    deb: "{{item.path}}"
+    install_recommends: yes
+  with_items: "{{ pkg_list.files }}"
   when: ansible_facts['os_family'] == "Debian"
+
+- name: Get rpm list
+  set_fact:
+    pkg_list: "{{ pkg_list.files | map(attribute='path') | list}}"
 
 - name: Install Containerd and Docker in Centos/RedHat
   ansible.builtin.yum:
     name: "{{pkg_list}}"
-  with_items: "{{ pkg_list }}"
+    state: present
   when: ansible_facts['os_family'] == "RedHat"
 
 - name: Add Nomad user to Docker group

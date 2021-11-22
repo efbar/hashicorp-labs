@@ -1,96 +1,96 @@
 ---
 # tasks file for monitoring
-- name: Download and extract Prometheus binary
-  ansible.builtin.unarchive:
-    src: "{{ prometheus_url }}"
-    dest: /tmp
-    remote_src: yes
-  ignore_errors: yes
-  tags: [ monitoring ]
+# - name: Download and extract Prometheus binary
+#   ansible.builtin.unarchive:
+#     src: "{{ prometheus_url }}"
+#     dest: /tmp
+#     remote_src: yes
+#   ignore_errors: yes
+#   tags: [monitoring]
 
-- name: Create Prometheus group
-  ansible.builtin.group:
-    name: prometheus
-    state: present
+# - name: Create Prometheus group
+#   ansible.builtin.group:
+#     name: prometheus
+#     state: present
 
-- name: Create Prometheus user
-  ansible.builtin.user:
-    name: prometheus
-    comment: "Prometheus user"
-    group: prometheus
-    system: true
-    create_home: false
+# - name: Create Prometheus user
+#   ansible.builtin.user:
+#     name: prometheus
+#     comment: "Prometheus user"
+#     group: prometheus
+#     system: true
+#     create_home: false
 
-- name: Create Prometheus dirs
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    mode: '0755'
-    owner: prometheus
-    group: prometheus
-    recurse: yes
-  loop:
-    - /etc/prometheus
-    - /var/lib/prometheus
+# - name: Create Prometheus dirs
+#   ansible.builtin.file:
+#     path: "{{ item }}"
+#     state: directory
+#     mode: "0755"
+#     owner: prometheus
+#     group: prometheus
+#     recurse: yes
+#   loop:
+#     - /etc/prometheus
+#     - /var/lib/prometheus
 
-- name: Add Prometheus config
-  copy:
-    src: files/prometheus.yml
-    dest: /etc/prometheus
-    owner: prometheus
-    group: prometheus
-    mode: '0755'
+# - name: Add Prometheus config
+#   copy:
+#     src: files/prometheus.yml
+#     dest: /etc/prometheus
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0755"
 
-- name: Move binaries to bin
-  copy:
-    src: "{{ item }}"
-    dest: /usr/local/bin
-    owner: prometheus
-    group: prometheus
-    mode: '0755'
-  loop:
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/prometheus"
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/promtool"
+# - name: Move binaries to bin
+#   copy:
+#     src: "{{ item }}"
+#     dest: /usr/local/bin
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0755"
+#   loop:
+#     - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/prometheus"
+#     - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/promtool"
 
-- name: Move configs to Prometheus folder
-  copy:
-    src: "{{ item }}"
-    dest: /etc/prometheus
-    owner: prometheus
-    group: prometheus
-    mode: '0755'
-  loop:
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/consoles"
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/console_libraries"
+# - name: Move configs to Prometheus folder
+#   copy:
+#     src: "{{ item }}"
+#     dest: /etc/prometheus
+#     owner: prometheus
+#     group: prometheus
+#     mode: "0755"
+#   loop:
+#     - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/consoles"
+#     - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/console_libraries"
 
-- name: Set Prometheus systemd service
-  blockinfile:
-    create: yes
-    block: |
-      [Unit]
-      Description=Prometheus
-      Wants=network-online.target
-      After=network-online.target
+# - name: Set Prometheus systemd service
+#   blockinfile:
+#     create: yes
+#     block: |
+#       [Unit]
+#       Description=Prometheus
+#       Wants=network-online.target
+#       After=network-online.target
 
-      [Service]
-      User=prometheus
-      Group=prometheus
-      Type=simple
-      ExecStart=/usr/local/bin/prometheus \
-      --config.file /etc/prometheus/prometheus.yml \
-      --storage.tsdb.path /var/lib/prometheus/ \
-      --web.console.templates=/etc/prometheus/consoles \
-      --web.console.libraries=/etc/prometheus/console_libraries
+#       [Service]
+#       User=prometheus
+#       Group=prometheus
+#       Type=simple
+#       ExecStart=/usr/local/bin/prometheus \
+#       --config.file /etc/prometheus/prometheus.yml \
+#       --storage.tsdb.path /var/lib/prometheus/ \
+#       --web.console.templates=/etc/prometheus/consoles \
+#       --web.console.libraries=/etc/prometheus/console_libraries
 
-      [Install]
-      WantedBy=multi-user.target
-    path: /etc/systemd/system/prometheus.service
+#       [Install]
+#       WantedBy=multi-user.target
+#     path: /etc/systemd/system/prometheus.service
 
-- name: Enable and start Prometheus service
-  ansible.builtin.service:
-    name: prometheus
-    enabled: yes
-    state: started
+# - name: Enable and start Prometheus service
+#   ansible.builtin.service:
+#     name: prometheus
+#     enabled: yes
+#     state: started
 
 - name: Download Grafana
   get_url:
@@ -112,7 +112,7 @@
   ansible.builtin.file:
     path: /var/lib/grafana/plugins
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Download and extract Grafana plugins
   ansible.builtin.unarchive:
@@ -130,7 +130,7 @@
     owner: grafana
     group: grafana
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Add Grafana datasources
   copy:
@@ -138,7 +138,7 @@
     dest: "/etc/grafana/provisioning/datasources/"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/prometheus-ds.yaml
 
@@ -148,7 +148,7 @@
     dest: "/etc/grafana/provisioning/dashboards/"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/dashboard-provision.yaml
 
@@ -158,7 +158,7 @@
     dest: "/var/lib/grafana/dashboards"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/faasd.json
     - files/nomad-jobs.json
