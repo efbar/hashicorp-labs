@@ -6,6 +6,8 @@ tfrequired = 13.1
 ARM_CHECK := $(shell uname -m)
 ifneq (${ARM_CHECK},arm64)
 	VAGRANT_ISO_ARM = false
+else
+	VAGRANT_ISO_ARM = true
 endif
 TFERR := $(shell echo "${tfversion} < ${tfrequired}" | bc -l)
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -70,7 +72,7 @@ endif
 vagrant:
 
 ifeq ($(VAGRANT_VMWARE), true)
-	@cd $(VAGRANT_CWD) && vagrant up --provider vmware_fusion
+	@cd $(VAGRANT_CWD) && ARM_CHECK=$(ARM_CHECK) vagrant up --provider vmware_fusion
 else
 	@cd $(VAGRANT_CWD) && vagrant up
 endif
