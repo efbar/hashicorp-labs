@@ -26,10 +26,10 @@ It's been revisited and modified (and it will be upgraded in the future).
 
 You can choose respective software versions and VM specs with these environment variables:
 
-| ENV                                | description                    | default value         | Centos 7 alternative         | Centos 7 alternative |
+| ENV                                | description                    | default value         | Ubuntu ARM alternative       | Centos 7 alternative |
 | ---------------------------------- | ------------------------------ | --------------------- | ---------------------------- | -------------------- |
-| `BASE_BOX`                         | `Vagrant Base Box`             | `bento/ubuntu-21.04`  | `rkrause/ubuntu-21.10-arm64` | `bento/centos-7`     |
-| `BOX_VERSION`                      | `Vagrant Base Box Version`     | `202109.07.0`         | `1.0.0`                      | `202103.18.0`        |
+| `BASE_BOX`                         | `Vagrant Base Box`             | `generic/ubuntu2110`  | `rkrause/ubuntu-21.10-arm64` | `bento/centos-7`     |
+| `BOX_VERSION`                      | `Vagrant Base Box Version`     | `3.5.2`               | `1.0.0`                      | `202103.18.0`        |
 | `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`     | `2`                   |                              |                      |
 | `VAGRANT_MEM`                      | `Memory used by VM`            | `8192`                |                              |                      |
 | `VAGRANT_VMWARE`                   | `If set, uses VMware provider` | `false`               |                              |                      |
@@ -69,8 +69,8 @@ By default it will use VirtualBox. To use VMware add `VAGRANT_VMWARE=true` to yo
 
 > Now you can install it also in ARM based hosts (like Macbook M1 pro on hypervisor VMWare Fusion). With Ubuntu 21.10.
 
-> **Tested with Centos 7, Ubuntu 21.04 and Ubuntu 21.10 ARM**
-> Boxes: **bentos/centos-7**, **bento/ubuntu-21.04**, **rkrause/ubuntu-21.10-arm64**
+> **Tested with Centos 7, Ubuntu 21.10 and Ubuntu 21.10 ARM**
+> Boxes: **bentos/centos-7**, **generic/ubuntu2110**, **rkrause/ubuntu-21.10-arm64**
 
 > **Makefile useful tips**
 > 
