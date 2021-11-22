@@ -140,6 +140,19 @@
     enabled: yes
     state: started
 
+- name: Stop systemd-resolved service
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    state: stopped
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Restart DNSmasq service
+  ansible.builtin.service:
+    name: dnsmasq.service
+    enabled: yes
+    state: restarted
+  when: ansible_facts['os_family'] == "Debian"
+
 - name: Set consul systemd service
   blockinfile:
     create: yes
