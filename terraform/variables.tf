@@ -16,7 +16,7 @@ variable "faasd_version" {
 }
 variable "faasd_arm" {
   type    = bool
-  default = true
+  default = false
 }
 variable "faas_nats_version" {
   type    = string
