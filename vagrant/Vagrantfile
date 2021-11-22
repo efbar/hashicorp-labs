@@ -101,7 +101,6 @@ Vagrant.configure("2") do |config|
         v.vmx["virtualhw.version"] = 18
       end
       v.vmx["ethernet0.pcislotnumber"] = "160"
-      # v.gui = true
     end
   end
   
