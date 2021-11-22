@@ -29,9 +29,7 @@ job "faasd_bundle" {
       port "gateway_mon" {
         to = 8082
       }
-      dns {
-        servers = ["192.168.50.153"]
-      }
+      
     }
 
     service {
@@ -144,6 +142,7 @@ job "faasd_bundle" {
           "--cluster_id=faas-cluster",
           "-DV"
         ]
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       env {
         read_timeout  = "${timeout}"
@@ -161,7 +160,7 @@ job "faasd_bundle" {
       config {
         image = "ghcr.io/openfaas/basic-auth:${faas_auth_plugin_version}"
         ports = ["auth_http"]
-
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
 
       template {
@@ -192,6 +191,7 @@ job "faasd_bundle" {
       config {
         image = "ghcr.io/openfaas/gateway:${faas_gateway_version}"
         ports = ["gateway_http", "gateway_mon"]
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       template {
         data        = "password"
@@ -227,6 +227,7 @@ job "faasd_bundle" {
       driver = "docker"
       config {
         image = "ghcr.io/openfaas/queue-worker:${faas_queue_worker_version}"
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       template {
         data        = "password"
