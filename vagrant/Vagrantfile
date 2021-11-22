@@ -12,8 +12,7 @@ vagrant_mem = ENV['VAGRANT_MEM'] || 8192
 # private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 
 # Base box selection
-host_arch_type = `uname -m`
-if host_arch_type != "arm64"
+if ENV['ARM_CHECK'] != "arm64"
   base_box = ENV['BASE_BOX'] || "bento/ubuntu-21.04"
   box_version = ENV['BOX_VERSION'] || "202109.07.0"
 else
@@ -98,7 +97,11 @@ Vagrant.configure("2") do |config|
       v.vmx["memsize"] = vagrant_mem
       v.vmx["numvcpus"] = vagrant_cpu_num
       v.vmx["tools.upgrade.policy"] = "manual"
-      v.vmx["virtualhw.version"] = 18
+      if base_box == "bento/ubuntu-21.04"
+        v.vmx["virtualhw.version"] = 18
+      end
+      v.vmx["ethernet0.pcislotnumber"] = "160"
+      # v.gui = true
     end
   end
   
@@ -168,7 +171,7 @@ Vagrant.configure("2") do |config|
       docker_scan_version: docker_scan_version,
       prometheus_version: prometheus_version,
       grafana_version: grafana_version,
-      faas_arm: host_arch_type != "arm64",
+      faas_arm: ENV['ARM_CHECK'] != "arm64",
     }
 
   # Forward Ingress port
