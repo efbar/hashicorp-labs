@@ -11,10 +11,10 @@ vagrant_mem = ENV['VAGRANT_MEM'] || 8192
 # Networking
 # private_ip = ENV['PRIVATE_IP'] || "192.168.50.153"
 
-# Base box selection
+# Default Base Box selection
 if ENV['ARM_CHECK'] != "arm64"
-  base_box = ENV['BASE_BOX'] || "bento/ubuntu-21.04"
-  box_version = ENV['BOX_VERSION'] || "202109.07.0"
+  base_box = ENV['BASE_BOX'] || "generic/ubuntu2110"
+  box_version = ENV['BOX_VERSION'] || "3.5.2"
 else
   base_box = ENV['BASE_BOX'] || "rkrause/ubuntu-21.10-arm64"
   box_version = ENV['BOX_VERSION'] || "1.0.0"
@@ -79,10 +79,6 @@ Vagrant.configure("2") do |config|
 
   # Use vagrant insecure public key, comment this out to restrict access
   config.ssh.insert_key = false
-
-  # Setup networking
-  # config.vm.network :private_network, ip: private_ip
-  # config.vm.network "private_network", type: "dhcp"
   
   # Increase memory for Virtualbox
   config.vm.provider "virtualbox" do |vb|
@@ -97,10 +93,12 @@ Vagrant.configure("2") do |config|
       v.vmx["memsize"] = vagrant_mem
       v.vmx["numvcpus"] = vagrant_cpu_num
       v.vmx["tools.upgrade.policy"] = "manual"
-      if base_box == "bento/ubuntu-21.04"
-        v.vmx["virtualhw.version"] = 18
+      if base_box == "generic/ubuntu2110"
+        config.vm.synced_folder ".", "/vagrant"
       end
-      v.vmx["ethernet0.pcislotnumber"] = "160"
+      if base_box == "rkrause/ubuntu-21.10-arm64"
+        v.vmx["ethernet0.pcislotnumber"] = "160"
+      end
     end
   end
   
