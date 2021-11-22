@@ -90,12 +90,6 @@
     - files/prometheus-service.json
     - files/grafana-service.json
 
-# - name: Start systemd-resolved service
-#   ansible.builtin.service:
-#     name: systemd-resolved.service
-#     state: started
-#   when: ansible_facts['os_family'] == "Debian"
-
 - name: Install dnsmasq
   ansible.builtin.package:
     name: "dnsmasq"
@@ -116,7 +110,13 @@
     state: restarted
   when: ansible_facts['os_family'] == "Debian"
 
-- name: Stop systemd-resolved service
+- name: Check that systemd-resolved service is started
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    state: started
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Then stop systemd-resolved service
   ansible.builtin.service:
     name: systemd-resolved.service
     state: stopped
@@ -140,18 +140,6 @@
     enabled: yes
     state: started
 
-- name: Stop systemd-resolved service
-  ansible.builtin.service:
-    name: systemd-resolved.service
-    state: stopped
-  when: ansible_facts['os_family'] == "Debian"
-
-- name: Restart DNSmasq service
-  ansible.builtin.service:
-    name: dnsmasq.service
-    enabled: yes
-    state: restarted
-  when: ansible_facts['os_family'] == "Debian"
 
 - name: Set consul systemd service
   blockinfile:
