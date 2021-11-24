@@ -38,9 +38,9 @@
 
 - name: Install Docker in Ubuntu/Debian
   ansible.builtin.apt:
-    deb: "{{item.path}}"
+    deb: "{{item.1.path}}"
     install_recommends: yes
-  with_items: "{{ pkg_list.files }}"
+  with_indexed_items: "{{ pkg_list.files }}"
   when: ansible_facts['os_family'] == "Debian"
 
 - name: Get rpm list
