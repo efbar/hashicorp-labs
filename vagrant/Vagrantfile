@@ -68,8 +68,6 @@ if base_box != "bento/centos-7"
 else
   grafana_version = ENV['GRAFANA_VERSION'] || "8.1.0-1"
 end
-# Tests tag to permorm only tests ansible tasks
-# tests_tag = ENV['TESTS_ONLY']
 
 # Provision only these ansible roles
 tags_only = ENV['TAGS_ONLY']
@@ -93,7 +91,7 @@ Vagrant.configure("2") do |config|
       v.vmx["memsize"] = vagrant_mem
       v.vmx["numvcpus"] = vagrant_cpu_num
       v.vmx["tools.upgrade.policy"] = "manual"
-      if base_box == "generic/ubuntu2110"
+      if base_box.match(/generic\/ubuntu/)
         config.vm.synced_folder ".", "/vagrant"
       end
       if base_box == "rkrause/ubuntu-21.10-arm64"

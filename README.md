@@ -69,8 +69,8 @@ By default it will use VirtualBox. To use VMware add `VAGRANT_VMWARE=true` to yo
 
 > Now you can install it also in ARM based hosts (like Macbook M1 pro on hypervisor VMWare Fusion). With Ubuntu 21.10.
 
-> **Tested with Centos 7, Ubuntu 21.10 and Ubuntu 21.10 ARM**
-> Boxes: **bentos/centos-7**, **generic/ubuntu2110**, **rkrause/ubuntu-21.10-arm64**
+> **Tested with Centos 7, Ubuntu 21.04, 21.10 and Ubuntu 21.10 ARM edition**
+> Boxes: **bentos/centos-7**, **generic/ubuntu2104**, **generic/ubuntu2110**, **rkrause/ubuntu-21.10-arm64**
 
 > **Makefile useful tips**
 > 
