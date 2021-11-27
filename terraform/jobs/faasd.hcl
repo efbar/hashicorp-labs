@@ -29,9 +29,7 @@ job "faasd_bundle" {
       port "gateway_mon" {
         to = 8082
       }
-      dns {
-        servers = ["192.168.50.153"]
-      }
+      
     }
 
     service {
@@ -110,7 +108,7 @@ job "faasd_bundle" {
       driver = "raw_exec"
       config {
         command = "sh"
-        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd && mkdir -p /var/lib/faasd && touch /var/lib/faasd/hosts /var/lib/faasd/resolv.conf && mv faasd /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
+        args    = ["-c", "wget -q https://github.com/openfaas/faasd/releases/download/${faasd_version}/faasd${faasd_arm} && mkdir -p /var/lib/faasd && touch /var/lib/faasd/hosts /var/lib/faasd/resolv.conf && mv faasd${faasd_arm} /usr/local/bin/faasd && chmod +x /usr/local/bin/faasd"]
       }
     }
 
@@ -144,6 +142,7 @@ job "faasd_bundle" {
           "--cluster_id=faas-cluster",
           "-DV"
         ]
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       env {
         read_timeout  = "${timeout}"
@@ -161,7 +160,7 @@ job "faasd_bundle" {
       config {
         image = "ghcr.io/openfaas/basic-auth:${faas_auth_plugin_version}"
         ports = ["auth_http"]
-
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
 
       template {
@@ -192,6 +191,7 @@ job "faasd_bundle" {
       config {
         image = "ghcr.io/openfaas/gateway:${faas_gateway_version}"
         ports = ["gateway_http", "gateway_mon"]
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       template {
         data        = "password"
@@ -227,6 +227,7 @@ job "faasd_bundle" {
       driver = "docker"
       config {
         image = "ghcr.io/openfaas/queue-worker:${faas_queue_worker_version}"
+        dns_servers = ["$${attr.unique.network.ip-address}"]
       }
       template {
         data        = "password"

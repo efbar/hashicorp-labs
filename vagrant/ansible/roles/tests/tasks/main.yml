@@ -1,4 +1,11 @@
 ---
+- name: Restart DNSmasq service
+  ansible.builtin.service:
+    name: dnsmasq.service
+    enabled: yes
+    state: restarted
+  when: ansible_facts['os_family'] == "Debian"
+
 - name: Perform maintenance tasks
   block:
     - name: Confirm that Vault is healthy

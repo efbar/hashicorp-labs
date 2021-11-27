@@ -1,6 +1,6 @@
 ---
 # vars file for nomad
-nomad_zip: nomad_{{ nomad_version }}_linux_amd64.zip
+nomad_zip: nomad_{{ nomad_version }}_linux_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.zip
 nomad_url: "https://releases.hashicorp.com/nomad/{{ nomad_version }}/{{ nomad_zip }}"
 nomad_dir: /usr/local/bin
 nomad_path: "{{ nomad_dir }}/nomad"

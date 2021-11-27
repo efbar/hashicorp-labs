@@ -43,7 +43,8 @@
 
 - name: Testing endpoints
   hosts: all
-  gather_facts: no
+  become: yes
+  gather_facts: yes
   roles:
     - tests
   tags: [ tests ]

@@ -6,7 +6,7 @@
     dest: /tmp
     remote_src: yes
   ignore_errors: yes
-  tags: [ monitoring ]
+  tags: [monitoring]
 
 - name: Create Prometheus group
   ansible.builtin.group:
@@ -25,7 +25,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: prometheus
     group: prometheus
     recurse: yes
@@ -39,7 +39,7 @@
     dest: /etc/prometheus
     owner: prometheus
     group: prometheus
-    mode: '0755'
+    mode: "0755"
 
 - name: Move binaries to bin
   copy:
@@ -47,10 +47,10 @@
     dest: /usr/local/bin
     owner: prometheus
     group: prometheus
-    mode: '0755'
+    mode: "0755"
   loop:
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool"
+    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/prometheus"
+    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/promtool"
 
 - name: Move configs to Prometheus folder
   copy:
@@ -58,10 +58,10 @@
     dest: /etc/prometheus
     owner: prometheus
     group: prometheus
-    mode: '0755'
+    mode: "0755"
   loop:
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles"
-    - "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries"
+    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/consoles"
+    - "/tmp/prometheus-{{ prometheus_version }}.linux-{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}/console_libraries"
 
 - name: Set Prometheus systemd service
   blockinfile:
@@ -92,21 +92,27 @@
     enabled: yes
     state: started
 
-- name: Download Grafana stuff
+- name: Download Grafana
   get_url:
-    url: "{{ grafana_url }}"
+    url: "{{ grafana_url }}.{{ 'deb' if ansible_facts['os_family'] == 'Debian' else 'rpm' }}"
     dest: /tmp
 
-- name: Install Grafana
-  yum:
+- name: Install Grafana in Ubuntu/Debian
+  ansible.builtin.apt:
+    deb: "/tmp/grafana_{{ grafana_version }}_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.deb"
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Install Grafana in Centos/RedHat
+  ansible.builtin.yum:
     name: "/tmp/grafana-{{ grafana_version }}.x86_64.rpm"
     state: present
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Create Grafana plugins dir
   ansible.builtin.file:
     path: /var/lib/grafana/plugins
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Download and extract Grafana plugins
   ansible.builtin.unarchive:
@@ -124,7 +130,7 @@
     owner: grafana
     group: grafana
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Add Grafana datasources
   copy:
@@ -132,7 +138,7 @@
     dest: "/etc/grafana/provisioning/datasources/"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/prometheus-ds.yaml
 
@@ -142,7 +148,7 @@
     dest: "/etc/grafana/provisioning/dashboards/"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/dashboard-provision.yaml
 
@@ -152,7 +158,7 @@
     dest: "/var/lib/grafana/dashboards"
     owner: grafana
     group: grafana
-    mode: '0644'
+    mode: "0644"
   loop:
     - files/faasd.json
     - files/nomad-jobs.json

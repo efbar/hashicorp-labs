@@ -14,6 +14,10 @@ variable "faasd_version" {
   type    = string
   default = "0.14.3"
 }
+variable "faasd_arm" {
+  type    = bool
+  default = false
+}
 variable "faas_nats_version" {
   type    = string
   default = "0.22.0"

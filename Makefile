@@ -3,6 +3,12 @@ green := $(shell tput setaf 2)
 reset := $(shell tput sgr0)
 tfversion = $(shell terraform version | awk 'NR==1{gsub("v0.",""); print $$2}')
 tfrequired = 13.1
+ARM_CHECK := $(shell uname -m)
+ifneq (${ARM_CHECK},arm64)
+	VAGRANT_ISO_ARM = false
+else
+	VAGRANT_ISO_ARM = true
+endif
 TFERR := $(shell echo "${tfversion} < ${tfrequired}" | bc -l)
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 VAGRANT_CWD = "${ROOT_DIR}/vagrant"
@@ -66,7 +72,7 @@ endif
 vagrant:
 
 ifeq ($(VAGRANT_VMWARE), true)
-	@cd $(VAGRANT_CWD) && vagrant up --provider vmware_fusion
+	@cd $(VAGRANT_CWD) && ARM_CHECK=$(ARM_CHECK) vagrant up --provider vmware_fusion
 else
 	@cd $(VAGRANT_CWD) && vagrant up
 endif
@@ -84,7 +90,8 @@ endif
 
 ## $ make terraform => simply "terraform apply"
 terraform:
-	@cd $(TF_DIR) && terraform init && terraform plan && terraform apply -auto-approve
+	
+	cd $(TF_DIR) && terraform init && terraform plan && terraform apply -var="faasd_arm=$(VAGRANT_ISO_ARM)" -auto-approve
 	@echo "$(green)$$BODY$(reset)"
 
 ## $ make tests => if VM has been provisioned correctly, runs some test to Hashicorp endpoints

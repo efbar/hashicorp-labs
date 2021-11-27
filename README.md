@@ -26,24 +26,26 @@ It's been revisited and modified (and it will be upgraded in the future).
 
 You can choose respective software versions and VM specs with these environment variables:
 
-| ENV                                | description                    | default value |
-| ---------------------------------- | ------------------------------ | ------------- |
-| `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`     | `2`           |
-| `VAGRANT_MEM`                      | `Memory used by VM`            | `8192`        |
-| `VAGRANT_VMWARE`                   | `If set, uses VMware provider` | `false`       |
-| `VAULT_VERSION`                    | `Vault version`                | `1.8.4`       |
-| `CONSUL_VERSION`                   | `Consul version`               | `1.10.4`      |
-| `NOMAD_VERSION`                    | `NOMAD version`                | `1.1.6`       |
-| `CNI_VERSION`                      | `CNI plugin version`           | `0.9.1`       |
-| `CONTAINERD_VERSION`               | `Containerd version`           | `1.4.9-3.1`   |
-| `DOCKER_CE_VERSION`                | `Docker CE version`            | `20.10.8-3`   |
-| `DOCKER_SCAN_VERSION`              | `Docker Scan version`          | `0.8.0-3`     |
-| `ENVOY_VERSION`                    | `Envoy version`                | `1.18.2`      |
-| `TF_VAR_faasd_version`             | `Faasd provider version`       | `0.13.0`      |
-| `TF_VAR_faas_nats_version`         | `NATS version version`         | `0.22.0`      |
-| `TF_VAR_faas_auth_plugin_version`  | `Faas Auth plugin version`     | `0.21.0`      |
-| `TF_VAR_faas_gateway_version`      | `Faas Gateway version`         | `0.21.0`      |
-| `TF_VAR_faas_queue_worker_version` | `Faas Queue Worker version`    | `0.12.2`      |
+| ENV                                | description                    | default value         | Ubuntu ARM alternative       | Centos 7 alternative |
+| ---------------------------------- | ------------------------------ | --------------------- | ---------------------------- | -------------------- |
+| `BASE_BOX`                         | `Vagrant Base Box`             | `generic/ubuntu2110`  | `rkrause/ubuntu-21.10-arm64` | `bento/centos-7`     |
+| `BOX_VERSION`                      | `Vagrant Base Box Version`     | `3.5.2`               | `1.0.0`                      | `202103.18.0`        |
+| `VAGRANT_CPU_NUM`                  | `Number of cpu used by VM`     | `2`                   |                              |                      |
+| `VAGRANT_MEM`                      | `Memory used by VM`            | `8192`                |                              |                      |
+| `VAGRANT_VMWARE`                   | `If set, uses VMware provider` | `false`               |                              |                      |
+| `VAULT_VERSION`                    | `Vault version`                | `1.8.4`               |                              |                      |
+| `CONSUL_VERSION`                   | `Consul version`               | `1.10.4`              |                              |                      |
+| `NOMAD_VERSION`                    | `NOMAD version`                | `1.1.6`               |                              |                      |
+| `CNI_VERSION`                      | `CNI plugin version`           | `0.9.1`               |                              |                      |
+| `CONTAINERD_VERSION`               | `Containerd version`           | `1.4.11-1`            |                              | `1.4.9-3.1`          |
+| `DOCKER_CE_VERSION`                | `Docker CE version`            | `20.10.10~3-0~ubuntu` |                              | `20.10.8-3`          |
+| `DOCKER_SCAN_VERSION`              | `Docker Scan version`          | `Not installed`       |                              | `0.8.0-3`            |
+| `ENVOY_VERSION`                    | `Envoy version`                | `1.18.2`              |                              |                      |
+| `TF_VAR_faasd_version`             | `Faasd provider version`       | `0.13.0`              |                              |                      |
+| `TF_VAR_faas_nats_version`         | `NATS version version`         | `0.22.0`              |                              |                      |
+| `TF_VAR_faas_auth_plugin_version`  | `Faas Auth plugin version`     | `0.21.0`              |                              |                      |
+| `TF_VAR_faas_gateway_version`      | `Faas Gateway version`         | `0.21.0`              |                              |                      |
+| `TF_VAR_faas_queue_worker_version` | `Faas Queue Worker version`    | `0.12.2`              |                              |                      |
 
 ## Provision and deploy
 
@@ -64,6 +66,11 @@ make
 with `make help` you'll find some other useful make targets to launch.
 
 By default it will use VirtualBox. To use VMware add `VAGRANT_VMWARE=true` to you're environment variables.
+
+> Now you can install it also in ARM based hosts (like Macbook M1 pro on hypervisor VMWare Fusion). With Ubuntu 21.10.
+
+> **Tested with Centos 7, Ubuntu 21.04, 21.10 and Ubuntu 21.10 ARM edition**
+> Boxes: **bentos/centos-7**, **generic/ubuntu2104**, **generic/ubuntu2110**, **rkrause/ubuntu-21.10-arm64**
 
 > **Makefile useful tips**
 > 

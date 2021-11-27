@@ -1,6 +1,6 @@
 ---
 # vars file for vault
-vault_zip: vault_{{ vault_version }}_linux_amd64.zip
+vault_zip: vault_{{ vault_version }}_linux_{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}.zip
 vault_url: "https://releases.hashicorp.com/vault/{{ vault_version }}/{{ vault_zip }}"
 vault_dir: /usr/local/bin
 vault_path: "{{ vault_dir }}/vault"

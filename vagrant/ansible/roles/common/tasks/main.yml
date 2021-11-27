@@ -11,10 +11,19 @@
   yum:
     list: updates
     update_cache: true
+  when: ansible_facts['os_family'] == "RedHat"
 
-- name: Install base packages
-  yum:
-    name: "{{ packages }}"
+- name: Install common base packages
+  ansible.builtin.package:
+    name: "{{ common_packages }}"
+    state: present
+    update_cache: yes
+
+- name: Install OS specific packages
+  vars:
+     - target_os: "{{ ansible_facts['os_family']|lower }}"
+  ansible.builtin.package:
+    name: "{{ lookup('vars', target_os + '_packages') }}"
     state: present
     update_cache: yes
 
@@ -23,3 +32,11 @@
     name: ntpd
     enabled: yes
     state: started
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Enable and start Chrony service
+  ansible.builtin.service:
+    name: chrony
+    enabled: yes
+    state: started
+  when: ansible_facts['os_family'] == "Debian"
