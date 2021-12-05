@@ -97,7 +97,7 @@ terraform:
 ## $ make tests => if VM has been provisioned correctly, runs some test to Hashicorp endpoints
 tests: v-prechecks
 	
-	@cd $(VAGRANT_CWD) && TESTS_ONLY=true vagrant provision
+	@cd $(VAGRANT_CWD) && TAGS_ONLY="tests" vagrant provision
 
 ## $ make dockerlogin => if DOCKER_USER and DOCKER_PASS environment variables are set, it let OpenFAAS login to docker hub registry
 dockerlogin: v-prechecks
