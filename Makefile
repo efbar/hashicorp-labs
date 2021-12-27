@@ -74,7 +74,7 @@ vagrant:
 ifeq ($(VAGRANT_VMWARE), true)
 	@cd $(VAGRANT_CWD) && ARM_CHECK=$(ARM_CHECK) vagrant up --provider vmware_fusion
 else
-	@cd $(VAGRANT_CWD) && vagrant up
+	@cd $(VAGRANT_CWD) && ARM_CHECK=$(ARM_CHECK) vagrant up
 endif
 ifneq ($(TERRAFORM_LABS),false)
 	@echo "$(green)$$NOTF_BODY$(reset)"
@@ -87,6 +87,11 @@ provision: v-prechecks
 ifneq ($(TERRAFORM_LABS),false)
 	@echo "$(green)$$NOTF_BODY$(reset)"
 endif
+
+## $ make reload => simply "vagrant reload"
+reload:
+
+	@cd $(VAGRANT_CWD) && vagrant reload
 
 ## $ make terraform => simply "terraform apply"
 terraform:
